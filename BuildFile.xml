@@ -4,6 +4,4 @@
 <flags EDM_PLUGIN="1"/>
 <use name="DataFormats/VertexReco"/>
 <use name="DataFormats/TrackReco"/>
-<use name="DataFormats/ParticleFlowCandidate"/>
-<use name="DataFormats/HepMCCandidate"/>
 <use name="CommonTools/UtilAlgos"/>

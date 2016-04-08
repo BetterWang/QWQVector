@@ -1,26 +1,27 @@
 #include <complex>
+#include "TTree.h"
 
 // Q Vector helper class
 class QVector {
 	typedef std::complex<double> Complex;
 public:
-	QVector()::q_(0,0), weight_(0){};
-	QVector(double x, double y, double w)::q_(x,y), weight_(w){};
+	QVector():q_(0,0), weight_(0){};
+	QVector(double x, double y, double w):q_(x,y), weight_(w){};
 	void AddParticle(double phi, double w) {
-		q_ += w * QVector(cos(phi), sin(phi));
+		q_ += w * Complex(cos(phi), sin(phi));
 		weight_ += w;
 	};
 	void RemoveParticle(double phi, double w) {
-		q_ -= w * QVector(cos(phi), sin(phi));
+		q_ -= w * Complex(cos(phi), sin(phi));
 		weight_ -= w;
 	};
-	Complex GetQ() {return q_};
-	double GetW() {return weight_};
+	Complex GetQ() {return q_;};
+	double GetW() {return weight_;};
 
 private:
 	Complex q_;
 	double weight_;
-}
+};
 
 // event structure
 const int NMAX_TRK = 10000;
@@ -50,9 +51,9 @@ public:
 	~QWQVector();
 
 private:
-	virtual void beginJob() ;
+	virtual void beginJob();
 	virtual void analyze(const edm::Event&, const edm::EventSetup&);
-	virtual void endJob() ;
+	virtual void endJob();
 
 	virtual void beginRun(edm::Run const&, edm::EventSetup const&);
 	virtual void endRun(edm::Run const&, edm::EventSetup const&);
@@ -70,10 +71,12 @@ private:
 	double maxPt_;
 
 	edm::InputTag					trackTag_;
+	edm::EDGetTokenT<int>                           centralityToken_;
 	edm::EDGetTokenT<reco::TrackCollection>		trackToken_;
+	std::vector<int>				algoParameters_;
+	edm::EDGetTokenT<reco::VertexCollection>	vertexToken_;
 	edm::EDGetTokenT<reco::EvtPlaneCollection>      epToken_;
 
-	std::vector<int> algoParameters_;
 
 	double	dzdzerror_;
 	double	d0d0error_;
@@ -83,7 +86,6 @@ private:
 	int	minCent_;
 	int	maxCent_;
 
-	edm::EDGetTokenT<reco::VertexCollection>	vertexToken_;
 
 
 	QWEvent t;
@@ -97,4 +99,4 @@ private:
 	double nre[12];
 	double nim[12];
 
-}
+};

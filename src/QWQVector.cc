@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <math.h>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
@@ -26,9 +28,10 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	, minPt_(iConfig.getUntrackedParameter<bool>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<bool>("maxPt", 3.0))
 	, trackTag_(iConfig.getUntrackedParameter<edm::InputTag>("trackTag"))
+	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality_")) )
 	, algoParameters_(iConfig.getParameter<std::vector<int> >("algoParameters"))
 	, vertexToken_( consumes<reco::VertexCollection>(iConfig.getUntrackedParameter<edm::InputTag>("vertexSrc")) )
-	, epToken_( consumes<reco::EvtPlaneCollection>(iConfig.getUntrackedParameter<edm::InputTag>("epSrc", string("hiEvtPlane") )) )
+	, epToken_( consumes<reco::EvtPlaneCollection>(iConfig.getUntrackedParameter<edm::InputTag>("epSrc", std::string("hiEvtPlane") )) )
 {
 	trackToken_ = consumes<reco::TrackCollection>(trackTag_);
 
@@ -67,7 +70,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 
 
 //////////////////
-void analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	if ( bGen_ ) analyzeMC(iEvent, iSetup);
 	else analyzeData(iEvent, iSetup);
@@ -100,9 +103,14 @@ void analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	return;
 }
 
+//////////////////
+QWQVector::~QWQVector()
+{
+	return;
+}
 
 //////////////////
-void analyzeData(const edm::Event&, const edm::EventSetup&)
+void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	using namespace edm;
 	using namespace reco;
@@ -112,7 +120,7 @@ void analyzeData(const edm::Event&, const edm::EventSetup&)
 	Handle<VertexCollection> vertexCollection;
 	iEvent.getByToken(vertexToken_, vertexCollection);
 	VertexCollection recoVertices = *vertexCollection;
-	if ( recoVertices.size() > nvtx_ ) return;
+	if ( recoVertices.size() <= 1 ) return;
 	sort(recoVertices.begin(), recoVertices.end(), [](const reco::Vertex &a, const reco::Vertex &b){
 			if ( a.tracksSize() == b.tracksSize() ) return a.chi2() < b.chi2() ? true:false;
 			return a.tracksSize() > b.tracksSize() ? true:false;
@@ -163,11 +171,11 @@ void analyzeData(const edm::Event&, const edm::EventSetup&)
 
 		if ( find( algoParameters_.begin(), algoParameters_.end(), itTrack->originalAlgo() ) == algoParameters_.end() ) continue;
 
-		t->Charge[t->Mult] = itTrack->charge();
-		t->Pt[t->Mult] = itTrack->pt();
-		t->Eta[t->Mult] = itTrack->eta();
-		t->Phi[t->Mult] = itTrack->phi();
-		t->Mult++;
+		t.Charge[t.Mult] = itTrack->charge();
+		t.Pt[t.Mult] = itTrack->pt();
+		t.Eta[t.Mult] = itTrack->eta();
+		t.Phi[t.Mult] = itTrack->phi();
+		t.Mult++;
 	}
 
         edm::Handle<reco::EvtPlaneCollection> epCollection;
@@ -187,46 +195,44 @@ void analyzeData(const edm::Event&, const edm::EventSetup&)
 }
 
 //////////////////
-void analyzeMC(const edm::Event&, const edm::EventSetup&)
-{
-
-	return;
-}
-
-//////////////////
-void beginJob()
+void QWQVector::analyzeMC(const edm::Event&, const edm::EventSetup&)
 {
 	return;
 }
 
+
 //////////////////
-void endJob()
+void QWQVector::beginJob()
 {
 	return;
 }
 
 //////////////////
-void beginRun(edm::Run const&, edm::EventSetup const&)
+void QWQVector::endJob()
 {
 	return;
 }
 
-//////////////////
-void endRun(edm::Run const&, edm::EventSetup const&)
+void QWQVector::beginRun(edm::Run const&, edm::EventSetup const&)
 {
 	return;
 }
 
-//////////////////
-void beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+void QWQVector::endRun(edm::Run const&, edm::EventSetup const&)
 {
 	return;
 }
 
-//////////////////
-void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+void QWQVector::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
 {
 	return;
 }
 
+void QWQVector::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+{
+	return;
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(QWQVector);
 
