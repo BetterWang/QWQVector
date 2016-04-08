@@ -25,15 +25,14 @@
 
 QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	  bGen_(iConfig.getUntrackedParameter<bool>("bGen", false))
-	, minPt_(iConfig.getUntrackedParameter<bool>("minPt", 1.0))
-	, maxPt_(iConfig.getUntrackedParameter<bool>("maxPt", 3.0))
-	, trackTag_(iConfig.getUntrackedParameter<edm::InputTag>("trackTag"))
-	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality_")) )
+	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
+	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
+	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality")) )
+	, trackToken_(consumes<reco::TrackCollection>(iConfig.getUntrackedParameter<edm::InputTag>("trackTag")))
 	, algoParameters_(iConfig.getParameter<std::vector<int> >("algoParameters"))
 	, vertexToken_( consumes<reco::VertexCollection>(iConfig.getUntrackedParameter<edm::InputTag>("vertexSrc")) )
 	, epToken_( consumes<reco::EvtPlaneCollection>(iConfig.getUntrackedParameter<edm::InputTag>("epSrc", std::string("hiEvtPlane") )) )
 {
-	trackToken_ = consumes<reco::TrackCollection>(trackTag_);
 
 	dzdzerror_ = iConfig.getUntrackedParameter<double>("dzdzerror", 3.);
 	d0d0error_ = iConfig.getUntrackedParameter<double>("d0d0error", 3.);
@@ -65,6 +64,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("nIm",  &t.nIm,  "nIm/D");
 
 	trV->Branch("cent", &(t.Cent), "cent/I");
+	trV->Branch("mult", &(t.Mult), "Mult/I");
 
 }
 
@@ -74,6 +74,7 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	if ( bGen_ ) analyzeMC(iEvent, iSetup);
 	else analyzeData(iEvent, iSetup);
+
 
 	if ( t.Mult == 0 ) return;
 
@@ -120,7 +121,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 	Handle<VertexCollection> vertexCollection;
 	iEvent.getByToken(vertexToken_, vertexCollection);
 	VertexCollection recoVertices = *vertexCollection;
-	if ( recoVertices.size() <= 1 ) return;
+	if ( recoVertices.size() < 1 ) return;
 	sort(recoVertices.begin(), recoVertices.end(), [](const reco::Vertex &a, const reco::Vertex &b){
 			if ( a.tracksSize() == b.tracksSize() ) return a.chi2() < b.chi2() ? true:false;
 			return a.tracksSize() > b.tracksSize() ? true:false;

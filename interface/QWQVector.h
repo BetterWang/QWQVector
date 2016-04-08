@@ -70,7 +70,6 @@ private:
 	double minPt_;
 	double maxPt_;
 
-	edm::InputTag					trackTag_;
 	edm::EDGetTokenT<int>                           centralityToken_;
 	edm::EDGetTokenT<reco::TrackCollection>		trackToken_;
 	std::vector<int>				algoParameters_;
