@@ -25,6 +25,7 @@
 
 QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	  bGen_(iConfig.getUntrackedParameter<bool>("bGen", false))
+	, N_(iConfig.getUntrackedParameter<int>("N", 2))
 	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
 	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality")) )
@@ -78,8 +79,8 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	if ( t.Mult == 0 ) return;
 
-	QVector pq[12];
-	QVector nq[12];
+	std::vector<QVector> pq(12, QVector(N_));
+	std::vector<QVector> nq(12, QVector(N_));
 
 	for ( int i = 0; i < t.Mult; i++ ) {
 		int bin = (t.Eta[i] + 2.4) / 0.4;

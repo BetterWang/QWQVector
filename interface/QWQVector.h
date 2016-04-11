@@ -5,20 +5,22 @@
 class QVector {
 	typedef std::complex<double> Complex;
 public:
-	QVector():q_(0,0), weight_(0){};
-	QVector(double x, double y, double w):q_(x,y), weight_(w){};
+	QVector(int N):N_(N), q_(0,0), weight_(0){};
+	QVector(int N, double x, double y, double w):N_(N), q_(x,y), weight_(w){};
 	void AddParticle(double phi, double w) {
-		q_ += w * Complex(cos(phi), sin(phi));
+		q_ += w * Complex(cos(N_*phi), sin(N_*phi));
 		weight_ += w;
 	};
 	void RemoveParticle(double phi, double w) {
-		q_ -= w * Complex(cos(phi), sin(phi));
+		q_ -= w * Complex(cos(N_*phi), sin(N_*phi));
 		weight_ -= w;
 	};
 	Complex GetQ() {return q_;};
 	double GetW() {return weight_;};
+	int GetN() { return N_; };
 
 private:
+	int N_;
 	Complex q_;
 	double weight_;
 };
@@ -66,6 +68,7 @@ private:
 
 
 	bool bGen_;
+	int  N_;
 
 	double minPt_;
 	double maxPt_;
