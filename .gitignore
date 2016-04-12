@@ -2,5 +2,6 @@ bin/
 test/*
 !test/qw*.py
 !test/crab_*.py
+QVector
 *.pyc
 tmp/
