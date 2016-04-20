@@ -7,7 +7,7 @@ class QVector {
 public:
 	QVector(int N):N_(N), q_(0,0), weight_(0){};
 	QVector(int N, double x, double y, double w):N_(N), q_(x,y), weight_(w){};
-	void AddParticle(double phi, double w) {
+	void AddParticle(double phi, double w=1.) {
 		q_ += w * Complex(cos(N_*phi), sin(N_*phi));
 		weight_ += w;
 	};
@@ -39,12 +39,18 @@ typedef struct QWEvent_ {
         double  weight[NMAX_TRK];
         int     RunId;
         int     EventId;
+
 	double	pRe;
 	double	pIm;
 	double	nRe;
 	double	nIm;
 	double	pHFw;
 	double	nHFw;
+
+	double	pRe2;
+	double	pIm2;
+	double	nRe2;
+	double	nIm2;
 } QWEvent;
 
 class QWQVector : public edm::EDAnalyzer {
@@ -68,7 +74,6 @@ private:
 
 
 	bool bGen_;
-	int  N_;
 
 	double minPt_;
 	double maxPt_;
@@ -100,5 +105,11 @@ private:
 	double nw[12];
 	double nre[12];
 	double nim[12];
+
+	double pre2[12];
+	double pim2[12];
+	double nre2[12];
+	double nim2[12];
+
 
 };

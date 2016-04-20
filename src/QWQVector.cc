@@ -25,7 +25,6 @@
 
 QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	  bGen_(iConfig.getUntrackedParameter<bool>("bGen", false))
-	, N_(iConfig.getUntrackedParameter<int>("N", 2))
 	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
 	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality")) )
@@ -51,21 +50,29 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("pw",  pw,  "pw[12]/D");
 	trV->Branch("pre", pre, "pre[12]/D");
 	trV->Branch("pim", pim, "pim[12]/D");
-
 	trV->Branch("nw",  nw,  "nw[12]/D");
 	trV->Branch("nre", nre, "nre[12]/D");
 	trV->Branch("nim", nim, "nim[12]/D");
 
+	trV->Branch("pre2", pre, "pre2[12]/D");
+	trV->Branch("pim2", pim, "pim2[12]/D");
+	trV->Branch("nre2", nre, "nre2[12]/D");
+	trV->Branch("nim2", nim, "nim2[12]/D");
+
 	trV->Branch("pHFw", &t.pHFw, "pHFw/D");
 	trV->Branch("pRe",  &t.pRe,  "pRe/D");
 	trV->Branch("pIm",  &t.pIm,  "pIm/D");
-
 	trV->Branch("nHFw", &t.nHFw, "nHFw/D");
 	trV->Branch("nRe",  &t.nRe,  "nRe/D");
 	trV->Branch("nIm",  &t.nIm,  "nIm/D");
 
+	trV->Branch("pRe2",  &t.pRe2,  "pRe2/D");
+	trV->Branch("pIm2",  &t.pIm2,  "pIm2/D");
+	trV->Branch("nRe2",  &t.nRe2,  "nRe2/D");
+	trV->Branch("nIm2",  &t.nIm2,  "nIm2/D");
+
 	trV->Branch("cent", &(t.Cent), "cent/I");
-	trV->Branch("mult", &(t.Mult), "Mult/I");
+	trV->Branch("mult", &(t.Mult), "mult/I");
 
 }
 
@@ -79,16 +86,20 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	if ( t.Mult == 0 ) return;
 
-	std::vector<QVector> pq(12, QVector(N_));
-	std::vector<QVector> nq(12, QVector(N_));
+	std::vector<QVector> pq(12, QVector(1));
+	std::vector<QVector> nq(12, QVector(1));
+	std::vector<QVector> pq2(12, QVector(2));
+	std::vector<QVector> nq2(12, QVector(2));
 
 	for ( int i = 0; i < t.Mult; i++ ) {
 		int bin = (t.Eta[i] + 2.4) / 0.4;
 		if ( bin < 0 or bin > 11 ) continue;
 		if ( t.Charge[i] > 0 ) {
-			pq[bin].AddParticle(t.Phi[i], t.Pt[i]);
+			pq[bin].AddParticle(t.Phi[i]);
+			pq2[bin].AddParticle(t.Phi[i]);
 		} else {
-			nq[bin].AddParticle(t.Phi[i], t.Pt[i]);
+			nq[bin].AddParticle(t.Phi[i]);
+			nq2[bin].AddParticle(t.Phi[i]);
 		}
 	}
 
@@ -99,6 +110,11 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		nw[i] =  nq[i].GetW();
 		nre[i] = nq[i].GetQ().real();
 		nim[i] = nq[i].GetQ().imag();
+
+		pre2[i] = pq2[i].GetQ().real();
+		pim2[i] = pq2[i].GetQ().imag();
+		nre2[i] = nq2[i].GetQ().real();
+		nim2[i] = nq2[i].GetQ().imag();
 	}
 	trV->Fill();
 
@@ -180,18 +196,23 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		t.Mult++;
 	}
 
-        edm::Handle<reco::EvtPlaneCollection> epCollection;
-        iEvent.getByToken(epToken_, epCollection);
-        if ( ! epCollection.isValid() ) return;
-        const reco::EvtPlaneCollection * ep = epCollection.product();
-        if ( ep->size() != hi::NumEPNames ) return;
-	t.nRe = (*ep)[hi::HFm2].qx(0);
-	t.nIm = (*ep)[hi::HFm2].qy(0);
-	t.nHFw = (*ep)[hi::HFm2].sumw();
+	edm::Handle<reco::EvtPlaneCollection> epCollection;
+	iEvent.getByToken(epToken_, epCollection);
+	if ( ! epCollection.isValid() ) return;
+	const reco::EvtPlaneCollection * ep = epCollection.product();
+	if ( ep->size() != hi::NumEPNames ) return;
 
-	t.pRe = (*ep)[hi::HFp2].qx(0);
-	t.pIm = (*ep)[hi::HFp2].qy(0);
-	t.pHFw = (*ep)[hi::HFp2].sumw();
+	t.nRe2 = (*ep)[hi::HFm2].qx(0);
+	t.nIm2 = (*ep)[hi::HFm2].qy(0);
+	t.pRe2 = (*ep)[hi::HFp2].qx(0);
+	t.pIm2 = (*ep)[hi::HFp2].qy(0);
+
+	t.nRe = (*ep)[hi::HFm1].qx(0);
+	t.nIm = (*ep)[hi::HFm1].qy(0);
+	t.nHFw = (*ep)[hi::HFm1].sumw();
+	t.pRe = (*ep)[hi::HFp1].qx(0);
+	t.pIm = (*ep)[hi::HFp1].qy(0);
+	t.pHFw = (*ep)[hi::HFp1].sumw();
 
 	return;
 }

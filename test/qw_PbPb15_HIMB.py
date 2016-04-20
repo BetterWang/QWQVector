@@ -48,7 +48,6 @@ process.hltMB.throw = cms.bool(False)
 
 
 process.QVector = cms.EDAnalyzer('QWQVector'
-        , N = cms.untracked.int32(2)
 	, centrality = cms.InputTag("centralityBin", "HFtowers")
 	, trackTag = cms.untracked.InputTag('hiGeneralTracks')
 	, vertexSrc = cms.untracked.InputTag('hiSelectedVertex', "")
