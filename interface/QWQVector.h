@@ -1,7 +1,23 @@
+#include <correlations/Types.hh>
+#include <correlations/Result.hh>
+#include <correlations/QVector.hh>
+#include <correlations/closed/FromQVector.hh>
+
 #include <complex>
 #include "TTree.h"
 
 // Q Vector helper class
+class QHelp {
+public:
+	QHelp : h1({1}), h2({2, -2}), h3({1, 1, -2}) ();
+
+private:
+	correlations::HarmonicVector h1;
+	correlations::HarmonicVector h2;
+	correlations::HarmonicVector h3;
+	correlations::QVector	q1p1, q2p2, q2p1, q3p2, q3p3;
+	correlations::QVector	q1n1, q2n2, q2n1, q3p2, q3n3;
+}
 class QVector {
 	typedef std::complex<double> Complex;
 public:
