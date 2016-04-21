@@ -9,15 +9,21 @@
 // Q Vector helper class
 class QHelp {
 public:
-	QHelp : h1({1}), h2({2, -2}), h3({1, 1, -2}) ();
+	QHelp() : h1{1}, h2{2, -2}, h3{1, 1, -2},
+	       q1p1(h1, true), q2p2(h2, true), q3p3(h3, true),
+	       q1n1(h1, true), q2n2(h2, true), q3n3(h3, true) {};
+	Fill(QWEvent * t) {
+
+	};
 
 private:
 	correlations::HarmonicVector h1;
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
-	correlations::QVector	q1p1, q2p2, q2p1, q3p2, q3p3;
-	correlations::QVector	q1n1, q2n2, q2n1, q3p2, q3n3;
-}
+	correlations::QVector	q1p1, q2p2, q3p3;
+	correlations::QVector	q1n1, q2n2, q3n3;
+};
+
 class QVector {
 	typedef std::complex<double> Complex;
 public:
