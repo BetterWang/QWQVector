@@ -39,6 +39,8 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	pterrorpt_ = iConfig.getUntrackedParameter<double>("pterrorpt", 0.1);
 	minvz_ = iConfig.getUntrackedParameter<double>("minvz", -1.);
 	maxvz_ = iConfig.getUntrackedParameter<double>("maxvz", 15.);
+	minEta_ = iConfig.getUntrackedParameter<double>("minEta", -2.4);
+	maxEta_ = iConfig.getUntrackedParameter<double>("maxEta", 2.4);
 
 	minCent_ = iConfig.getUntrackedParameter<int>("minCent", -1);
 	maxCent_ = iConfig.getUntrackedParameter<int>("maxCent", 500);
@@ -74,6 +76,8 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("cent", &(t.Cent), "cent/I");
 	trV->Branch("mult", &(t.Mult), "mult/I");
 
+	qval = new QValue();
+	trV->Branch("QValue", qval, 8000, 1);
 }
 
 
@@ -116,6 +120,12 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		nre2[i] = nq2[i].GetQ().real();
 		nim2[i] = nq2[i].GetQ().imag();
 	}
+
+	QHelp qh(qval);
+
+	qh.Fill( &t );
+	qh.GetQ();
+
 	trV->Fill();
 
 	return;
