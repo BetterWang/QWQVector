@@ -8,10 +8,52 @@
 #include "TTree.h"
 
 typedef std::complex<double> Complex;
+// event structure
+const int NMAX_TRK = 10000;
+typedef struct QWEvent_ {
+        int     Cent;
+        int     Mult;
+        double  vz;
+        int     Noff;
+        double  Pt[NMAX_TRK];
+        double  Eta[NMAX_TRK];
+        double  Phi[NMAX_TRK];
+        int     Charge[NMAX_TRK];
+        double  weight[NMAX_TRK];
+        int     RunId;
+        int     EventId;
+
+	double	pRe;
+	double	pIm;
+	double	nRe;
+	double	nIm;
+	double	pHFw;
+	double	nHFw;
+
+	double	pRe2;
+	double	pIm2;
+	double	nRe2;
+	double	nIm2;
+} QWEvent;
+
 // Q Vector helper class
+
+typedef struct QValue_ {
+	Complex Q1p, Q1n;
+	Complex Q2p1, Q2p2;
+	Complex Q2n1, Q2n2;
+	Complex Q3p2, Q3p3;
+	Complex Q3n2, Q3n3;
+	double wp1, wn1;
+	double wp2, wn2;
+	double wp3, wn3;
+	unsigned short cent;
+	unsigned short mult;
+} QValue;
+
 class QHelp {
 public:
-	QHelp(QValue* q) : qval(q), h1{1}, h2{2, -2}, h3{1, 1, -2},
+	QHelp( QValue* q ) : qval(q), h1{1}, h2{2, -2}, h3{1, 1, -2},
 	       q1p1(h1, true), q2p2(h2, true), q3p3(h3, true),
 	       q1n1(h1, true), q2n2(h2, true), q3n3(h3, true) {};
 	void Fill(QWEvent * const t) {
@@ -72,26 +114,13 @@ public:
 	};
 
 private:
+	QValue* qval;
 	correlations::HarmonicVector h1;
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
 	correlations::QVector	q1p1, q2p2, q3p3;
 	correlations::QVector	q1n1, q2n2, q3n3;
-	QValue* qval;
 };
-
-typedef struct QValue_ {
-	Complex Q1p, Q1n;
-	Complex Q2p1, Q2p2;
-	Complex Q2n1, Q2n2;
-	Complex Q3p2, Q3p3;
-	Complex Q3n2, Q3n3;
-	double wp1, wn1;
-	double wp2, wn2;
-	double wp3, wn3;
-	unsigned short cent;
-	unsigned short mult;
-} QValue;
 
 class QVector {
 public:
@@ -114,34 +143,6 @@ private:
 	Complex q_;
 	double weight_;
 };
-
-// event structure
-const int NMAX_TRK = 10000;
-typedef struct QWEvent_ {
-        int     Cent;
-        int     Mult;
-        double  vz;
-        int     Noff;
-        double  Pt[NMAX_TRK];
-        double  Eta[NMAX_TRK];
-        double  Phi[NMAX_TRK];
-        int     Charge[NMAX_TRK];
-        double  weight[NMAX_TRK];
-        int     RunId;
-        int     EventId;
-
-	double	pRe;
-	double	pIm;
-	double	nRe;
-	double	nIm;
-	double	pHFw;
-	double	nHFw;
-
-	double	pRe2;
-	double	pIm2;
-	double	nRe2;
-	double	nIm2;
-} QWEvent;
 
 class QWQVector : public edm::EDAnalyzer {
 public:
