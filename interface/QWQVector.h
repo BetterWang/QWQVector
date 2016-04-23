@@ -79,11 +79,11 @@ public:
 
 	void GetQ() {
 		correlations::closed::FromQVector cq1p1(q1p1);
-		correlations::closed::FromQVector cq2p2(q1p1);
-		correlations::closed::FromQVector cq3p3(q1p1);
-		correlations::closed::FromQVector cq1n1(q1p1);
-		correlations::closed::FromQVector cq2n2(q1p1);
-		correlations::closed::FromQVector cq3n3(q1p1);
+		correlations::closed::FromQVector cq2p2(q2p2);
+		correlations::closed::FromQVector cq3p3(q3p3);
+		correlations::closed::FromQVector cq1n1(q1n1);
+		correlations::closed::FromQVector cq2n2(q2n2);
+		correlations::closed::FromQVector cq3n3(q3n3);
 
 		correlations::Result r1p1 = cq1p1.calculate(1, h1);
 		correlations::Result r1n1 = cq1n1.calculate(1, h1);
