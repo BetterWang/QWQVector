@@ -76,8 +76,38 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("cent", &(t.Cent), "cent/I");
 	trV->Branch("mult", &(t.Mult), "mult/I");
 
-	qval = new QValue();
-	trV->Branch("QValue", qval, 8000, 1);
+	trV->Branch("rQ1p",  &(qval.rQ1p),  "rQ1p/D");
+	trV->Branch("rQ2p1", &(qval.rQ2p1), "rQ2p1/D");
+	trV->Branch("rQ2p2", &(qval.rQ2p2), "rQ2p2/D");
+	trV->Branch("rQ3p2", &(qval.rQ3p2), "rQ3p2/D");
+	trV->Branch("rQ3p3", &(qval.rQ3p3), "rQ3p3/D");
+
+	trV->Branch("rQ1n",  &(qval.rQ1n),  "rQ1n/D");
+	trV->Branch("rQ2n1", &(qval.rQ2n1), "rQ2n1/D");
+	trV->Branch("rQ2n2", &(qval.rQ2n2), "rQ2n2/D");
+	trV->Branch("rQ3n2", &(qval.rQ3n2), "rQ3n2/D");
+	trV->Branch("rQ3n3", &(qval.rQ3n3), "rQ3n3/D");
+
+	trV->Branch("iQ1p",  &(qval.iQ1p),  "iQ1p/D");
+	trV->Branch("iQ2p1", &(qval.iQ2p1), "iQ2p1/D");
+	trV->Branch("iQ2p2", &(qval.iQ2p2), "iQ2p2/D");
+	trV->Branch("iQ3p2", &(qval.iQ3p2), "iQ3p2/D");
+	trV->Branch("iQ3p3", &(qval.iQ3p3), "iQ3p3/D");
+
+	trV->Branch("iQ1n",  &(qval.iQ1n),  "iQ1n/D");
+	trV->Branch("iQ2n1", &(qval.iQ2n1), "iQ2n1/D");
+	trV->Branch("iQ2n2", &(qval.iQ2n2), "iQ2n2/D");
+	trV->Branch("iQ3n2", &(qval.iQ3n2), "iQ3n2/D");
+	trV->Branch("iQ3n3", &(qval.iQ3n3), "iQ3n3/D");
+
+	trV->Branch("wp1",  &(qval.wp1),  "wp1/D");
+	trV->Branch("wp2",  &(qval.wp2),  "wp2/D");
+	trV->Branch("wp3",  &(qval.wp3),  "wp3/D");
+
+	trV->Branch("wn1",  &(qval.wn1),  "wn1/D");
+	trV->Branch("wn2",  &(qval.wn2),  "wn2/D");
+	trV->Branch("wn3",  &(qval.wn3),  "wn3/D");
+
 }
 
 
@@ -121,10 +151,9 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		nim2[i] = nq2[i].GetQ().imag();
 	}
 
-	QHelp qh(qval);
+	QHelp qh(&qval);
 
 	qh.Fill( &t );
-	qh.GetQ();
 
 	trV->Fill();
 

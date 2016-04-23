@@ -39,16 +39,22 @@ typedef struct QWEvent_ {
 // Q Vector helper class
 
 typedef struct QValue_ {
-	Complex Q1p, Q1n;
-	Complex Q2p1, Q2p2;
-	Complex Q2n1, Q2n2;
-	Complex Q3p2, Q3p3;
-	Complex Q3n2, Q3n3;
+
+	double iQ1p,  iQ1n;
+	double iQ2p1, iQ2p2;
+	double iQ2n1, iQ2n2;
+	double iQ3p2, iQ3p3;
+	double iQ3n2, iQ3n3;
+
+	double rQ1p,  rQ1n;
+	double rQ2p1, rQ2p2;
+	double rQ2n1, rQ2n2;
+	double rQ3p2, rQ3p3;
+	double rQ3n2, rQ3n3;
+
 	double wp1, wn1;
 	double wp2, wn2;
 	double wp3, wn3;
-	unsigned short cent;
-	unsigned short mult;
 } QValue;
 
 class QHelp {
@@ -68,6 +74,7 @@ public:
 				q3n3.fill(t->Phi[i], t->weight[i]);
 			}
 		}
+		GetQ();
 	};
 
 	void GetQ() {
@@ -91,18 +98,32 @@ public:
 		correlations::Result r3n2 = cq3n3.calculate(2, h3);
 		correlations::Result r3n3 = cq3n3.calculate(3, h3);
 
-		qval->Q1p  = r1p1.sum();
-		qval->Q1n  = r1n1.sum();
+		qval->rQ1p  = r1p1.sum().real();
+		qval->rQ1n  = r1n1.sum().real();
 
-		qval->Q2p1  = r2p1.sum();
-		qval->Q2p2  = r2p2.sum();
-		qval->Q2n1  = r2n1.sum();
-		qval->Q2n2  = r2n2.sum();
+		qval->rQ2p1 = r2p1.sum().real();
+		qval->rQ2p2 = r2p2.sum().real();
+		qval->rQ2n1 = r2n1.sum().real();
+		qval->rQ2n2 = r2n2.sum().real();
 
-		qval->Q3p2 = r3p2.sum();
-		qval->Q3p3 = r3p3.sum();
-		qval->Q3n2 = r3n2.sum();
-		qval->Q3n3 = r3n3.sum();
+		qval->rQ3p2 = r3p2.sum().real();
+		qval->rQ3p3 = r3p3.sum().real();
+		qval->rQ3n2 = r3n2.sum().real();
+		qval->rQ3n3 = r3n3.sum().real();
+
+		qval->iQ1p  = r1p1.sum().imag();
+		qval->iQ1n  = r1n1.sum().imag();
+
+		qval->iQ2p1 = r2p1.sum().imag();
+		qval->iQ2p2 = r2p2.sum().imag();
+		qval->iQ2n1 = r2n1.sum().imag();
+		qval->iQ2n2 = r2n2.sum().imag();
+
+		qval->iQ3p2 = r3p2.sum().imag();
+		qval->iQ3p3 = r3p3.sum().imag();
+		qval->iQ3n2 = r3n2.sum().imag();
+		qval->iQ3n3 = r3n3.sum().imag();
+
 
 		qval->wp1 = r1p1.weight();
 		qval->wn1 = r1n1.weight();
@@ -205,6 +226,6 @@ private:
 	double nre2[12];
 	double nim2[12];
 
-	QValue * qval;
+	QValue qval;
 
 };
