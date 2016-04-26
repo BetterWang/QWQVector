@@ -65,13 +65,13 @@ public:
 	void Fill(QWEvent * const t) {
 		for ( int i = 0; i < t->Mult; i++ ) {
 			if ( t->Charge[i] > 0 ) {
-				q1p1.fill(t->Phi[i], t->weight[i]);
-				q2p2.fill(t->Phi[i], t->weight[i]);
-				q3p3.fill(t->Phi[i], t->weight[i]);
+				q1p1.fill(t->Phi[i], 1.);
+				q2p2.fill(t->Phi[i], 1.);
+				q3p3.fill(t->Phi[i], 1.);
 			} else {
-				q1n1.fill(t->Phi[i], t->weight[i]);
-				q2n2.fill(t->Phi[i], t->weight[i]);
-				q3n3.fill(t->Phi[i], t->weight[i]);
+				q1n1.fill(t->Phi[i], 1.);
+				q2n2.fill(t->Phi[i], 1.);
+				q3n3.fill(t->Phi[i], 1.);
 			}
 		}
 		GetQ();

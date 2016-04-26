@@ -107,7 +107,6 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("wn1",  &(qval.wn1),  "wn1/D");
 	trV->Branch("wn2",  &(qval.wn2),  "wn2/D");
 	trV->Branch("wn3",  &(qval.wn3),  "wn3/D");
-
 }
 
 
