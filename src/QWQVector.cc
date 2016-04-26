@@ -65,12 +65,14 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("mult", &(t.Mult), "mult/I");
 
 	trV->Branch("rQ1p",  &(qval.rQ1p),  "rQ1p/D");
+	trV->Branch("rQ1p2", &(qval.rQ1p2), "rQ1p/D");
 	trV->Branch("rQ2p1", &(qval.rQ2p1), "rQ2p1/D");
 	trV->Branch("rQ2p2", &(qval.rQ2p2), "rQ2p2/D");
 	trV->Branch("rQ3p2", &(qval.rQ3p2), "rQ3p2/D");
 	trV->Branch("rQ3p3", &(qval.rQ3p3), "rQ3p3/D");
 
 	trV->Branch("rQ1n",  &(qval.rQ1n),  "rQ1n/D");
+	trV->Branch("rQ1n2", &(qval.rQ1n2), "rQ1n/D");
 	trV->Branch("rQ2n1", &(qval.rQ2n1), "rQ2n1/D");
 	trV->Branch("rQ2n2", &(qval.rQ2n2), "rQ2n2/D");
 	trV->Branch("rQ3n2", &(qval.rQ3n2), "rQ3n2/D");
