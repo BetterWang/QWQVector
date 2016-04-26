@@ -65,26 +65,28 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("mult", &(t.Mult), "mult/I");
 
 	trV->Branch("rQ1p",  &(qval.rQ1p),  "rQ1p/D");
-	trV->Branch("rQ1p2", &(qval.rQ1p2), "rQ1p/D");
+	trV->Branch("rQ1p2", &(qval.rQ1p2), "rQ1p2/D");
 	trV->Branch("rQ2p1", &(qval.rQ2p1), "rQ2p1/D");
 	trV->Branch("rQ2p2", &(qval.rQ2p2), "rQ2p2/D");
 	trV->Branch("rQ3p2", &(qval.rQ3p2), "rQ3p2/D");
 	trV->Branch("rQ3p3", &(qval.rQ3p3), "rQ3p3/D");
 
 	trV->Branch("rQ1n",  &(qval.rQ1n),  "rQ1n/D");
-	trV->Branch("rQ1n2", &(qval.rQ1n2), "rQ1n/D");
+	trV->Branch("rQ1n2", &(qval.rQ1n2), "rQ1n2/D");
 	trV->Branch("rQ2n1", &(qval.rQ2n1), "rQ2n1/D");
 	trV->Branch("rQ2n2", &(qval.rQ2n2), "rQ2n2/D");
 	trV->Branch("rQ3n2", &(qval.rQ3n2), "rQ3n2/D");
 	trV->Branch("rQ3n3", &(qval.rQ3n3), "rQ3n3/D");
 
 	trV->Branch("iQ1p",  &(qval.iQ1p),  "iQ1p/D");
+	trV->Branch("iQ1p2", &(qval.iQ1p2), "iQ1p2/D");
 	trV->Branch("iQ2p1", &(qval.iQ2p1), "iQ2p1/D");
 	trV->Branch("iQ2p2", &(qval.iQ2p2), "iQ2p2/D");
 	trV->Branch("iQ3p2", &(qval.iQ3p2), "iQ3p2/D");
 	trV->Branch("iQ3p3", &(qval.iQ3p3), "iQ3p3/D");
 
 	trV->Branch("iQ1n",  &(qval.iQ1n),  "iQ1n/D");
+	trV->Branch("iQ1n2", &(qval.iQ1n2), "iQ1n2/D");
 	trV->Branch("iQ2n1", &(qval.iQ2n1), "iQ2n1/D");
 	trV->Branch("iQ2n2", &(qval.iQ2n2), "iQ2n2/D");
 	trV->Branch("iQ3n2", &(qval.iQ3n2), "iQ3n2/D");
