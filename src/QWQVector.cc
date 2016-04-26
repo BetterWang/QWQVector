@@ -49,18 +49,6 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	edm::Service<TFileService> fs;
 	trV = fs->make<TTree>("trV", "trV");
 
-	trV->Branch("pw",  pw,  "pw[12]/D");
-	trV->Branch("pre", pre, "pre[12]/D");
-	trV->Branch("pim", pim, "pim[12]/D");
-	trV->Branch("nw",  nw,  "nw[12]/D");
-	trV->Branch("nre", nre, "nre[12]/D");
-	trV->Branch("nim", nim, "nim[12]/D");
-
-	trV->Branch("pre2", pre, "pre2[12]/D");
-	trV->Branch("pim2", pim, "pim2[12]/D");
-	trV->Branch("nre2", nre, "nre2[12]/D");
-	trV->Branch("nim2", nim, "nim2[12]/D");
-
 	trV->Branch("pHFw", &t.pHFw, "pHFw/D");
 	trV->Branch("pRe",  &t.pRe,  "pRe/D");
 	trV->Branch("pIm",  &t.pIm,  "pIm/D");
@@ -116,39 +104,7 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	if ( bGen_ ) analyzeMC(iEvent, iSetup);
 	else analyzeData(iEvent, iSetup);
 
-
 	if ( t.Mult == 0 ) return;
-
-	std::vector<QVector> pq(12, QVector(1));
-	std::vector<QVector> nq(12, QVector(1));
-	std::vector<QVector> pq2(12, QVector(2));
-	std::vector<QVector> nq2(12, QVector(2));
-
-	for ( int i = 0; i < t.Mult; i++ ) {
-		int bin = (t.Eta[i] + 2.4) / 0.4;
-		if ( bin < 0 or bin > 11 ) continue;
-		if ( t.Charge[i] > 0 ) {
-			pq[bin].AddParticle(t.Phi[i]);
-			pq2[bin].AddParticle(t.Phi[i]);
-		} else {
-			nq[bin].AddParticle(t.Phi[i]);
-			nq2[bin].AddParticle(t.Phi[i]);
-		}
-	}
-
-	for ( int i = 0; i < 12; i++ ) {
-		pw[i] =  pq[i].GetW();
-		pre[i] = pq[i].GetQ().real();
-		pim[i] = pq[i].GetQ().imag();
-		nw[i] =  nq[i].GetW();
-		nre[i] = nq[i].GetQ().real();
-		nim[i] = nq[i].GetQ().imag();
-
-		pre2[i] = pq2[i].GetQ().real();
-		pim2[i] = pq2[i].GetQ().imag();
-		nre2[i] = nq2[i].GetQ().real();
-		nim2[i] = nq2[i].GetQ().imag();
-	}
 
 	QHelp qh(&qval);
 
@@ -296,4 +252,3 @@ void QWQVector::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup 
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(QWQVector);
-

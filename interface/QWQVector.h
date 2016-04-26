@@ -214,18 +214,6 @@ private:
 
 	TTree * trV;
 
-	double pw[12];
-	double pre[12];
-	double pim[12];
-	double nw[12];
-	double nre[12];
-	double nim[12];
-
-	double pre2[12];
-	double pim2[12];
-	double nre2[12];
-	double nim2[12];
-
 	QValue qval;
 
 };
