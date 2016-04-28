@@ -95,6 +95,11 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 		trV[i]->Branch("iQ3n2", &(qval[i].iQ3n2), "iQ3n2/D");
 		trV[i]->Branch("iQ3n3", &(qval[i].iQ3n3), "iQ3n3/D");
 
+		trV[i]->Branch("rQMp2", &(qval[i].rQMp2), "rQMp2/D");
+		trV[i]->Branch("rQMn2", &(qval[i].rQMn2), "rQMn2/D");
+		trV[i]->Branch("iQMp2", &(qval[i].iQMp2), "iQMp2/D");
+		trV[i]->Branch("iQMn2", &(qval[i].iQMn2), "iQMn2/D");
+
 		trV[i]->Branch("wp1",   &(qval[i].wp1),  "wp1/D");
 		trV[i]->Branch("wp2",   &(qval[i].wp2),  "wp2/D");
 		trV[i]->Branch("wp3",   &(qval[i].wp3),  "wp3/D");

@@ -46,6 +46,7 @@ typedef struct QValue_ {
 	double iQ2n1, iQ2n2;
 	double iQ3p2, iQ3p3;
 	double iQ3n2, iQ3n3;
+	double iQMp2, iQMn2;
 
 	double rQ1p,  rQ1n;
 	double rQ1p2, rQ1n2;
@@ -53,6 +54,7 @@ typedef struct QValue_ {
 	double rQ2n1, rQ2n2;
 	double rQ3p2, rQ3p3;
 	double rQ3n2, rQ3n3;
+	double rQMp2, rQMn2;
 
 	double wp1, wn1;
 	double wp2, wn2;
@@ -62,9 +64,10 @@ typedef struct QValue_ {
 class QHelp {
 public:
 	QHelp( QValue* q, double eta1, double eta2 ) : qval(q), etaL(eta1), etaH(eta2),
-		h1{1, -1}, h2{2, -2}, h3{1, 1, -2},
+		h1{1, -1}, h2{2, -2}, h3{1, 1, -2}, hM{1,-2},
 		q1p1(h1, true), q1p2(h1, true), q2p2(h2, true), q3p3(h3, true),
-		q1n1(h1, true), q1n2(h1, true), q2n2(h2, true), q3n3(h3, true) {};
+		q1n1(h1, true), q1n2(h1, true), q2n2(h2, true), q3n3(h3, true),
+		qMp2(hM, true), qMn2(hM, true) {};
 	void Fill(QWEvent * const t) {
 		for ( int i = 0; i < t->Mult; i++ ) {
 			if ( t->Eta[i] < etaL and t->Eta[i] > etaH) continue;
@@ -73,11 +76,13 @@ public:
 				q1p2.fill(t->Phi[i], 1.);
 				q2p2.fill(t->Phi[i], 1.);
 				q3p3.fill(t->Phi[i], 1.);
+				qMp2.fill(t->Phi[i], 1.);
 			} else {
 				q1n1.fill(t->Phi[i], 1.);
 				q1n2.fill(t->Phi[i], 1.);
 				q2n2.fill(t->Phi[i], 1.);
 				q3n3.fill(t->Phi[i], 1.);
+				qMn2.fill(t->Phi[i], 1.);
 			}
 		}
 		GetQ();
@@ -93,6 +98,9 @@ public:
 		correlations::closed::FromQVector cq2n2(q2n2);
 		correlations::closed::FromQVector cq3n3(q3n3);
 
+		correlations::closed::FromQVector cqMp2(qMp2);
+		correlations::closed::FromQVector cqMn2(qMn2);
+
 		correlations::Result r1p1 = cq1p1.calculate(1, h1);
 		correlations::Result r1n1 = cq1n1.calculate(1, h1);
 		correlations::Result r1p2 = cq1p2.calculate(2, h1);
@@ -107,6 +115,9 @@ public:
 		correlations::Result r3p3 = cq3p3.calculate(3, h3);
 		correlations::Result r3n2 = cq3n3.calculate(2, h3);
 		correlations::Result r3n3 = cq3n3.calculate(3, h3);
+
+		correlations::Result rMp2 = cqMp2.calculate(2, hM);
+		correlations::Result rMn2 = cqMn2.calculate(2, hM);
 
 		qval->rQ1p  = r1p1.sum().real();
 		qval->rQ1n  = r1n1.sum().real();
@@ -138,6 +149,10 @@ public:
 		qval->iQ3n2 = r3n2.sum().imag();
 		qval->iQ3n3 = r3n3.sum().imag();
 
+		qval->rQMp2 = rMp2.sum().real();
+		qval->iQMp2 = rMp2.sum().imag();
+		qval->rQMn2 = rMn2.sum().real();
+		qval->iQMn2 = rMn2.sum().imag();
 
 		qval->wp1 = r1p1.weight();
 		qval->wn1 = r1n1.weight();
@@ -154,8 +169,10 @@ private:
 	correlations::HarmonicVector h1;
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
+	correlations::HarmonicVector hM;
 	correlations::QVector	q1p1, q1p2, q2p2, q3p3;
 	correlations::QVector	q1n1, q1n2, q2n2, q3n3;
+	correlations::QVector	qMp2, qMn2;
 };
 
 class QVector {
