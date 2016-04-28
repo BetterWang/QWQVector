@@ -234,8 +234,6 @@ private:
 	double	pterrorpt_;
 	double  minvz_;
 	double  maxvz_;
-	double  minEta_;
-	double  maxEta_;
 
 	int	minCent_;
 	int	maxCent_;

@@ -39,8 +39,6 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	pterrorpt_ = iConfig.getUntrackedParameter<double>("pterrorpt", 0.1);
 	minvz_ = iConfig.getUntrackedParameter<double>("minvz", -1.);
 	maxvz_ = iConfig.getUntrackedParameter<double>("maxvz", 15.);
-	minEta_ = iConfig.getUntrackedParameter<double>("minEta", -2.4);
-	maxEta_ = iConfig.getUntrackedParameter<double>("maxEta", 2.4);
 
 	minCent_ = iConfig.getUntrackedParameter<int>("minCent", -1);
 	maxCent_ = iConfig.getUntrackedParameter<int>("maxCent", 500);
@@ -184,7 +182,6 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( !itTrack->quality(reco::TrackBase::highPurity) ) continue;
 		if ( itTrack->pt() > maxPt_ or itTrack->pt() < minPt_ ) continue;
 		if ( fabs(itTrack->eta()) > 2.4 ) continue;
-		if ( itTrack->eta() > maxEta_ or itTrack->eta() < minEta_ ) continue;
 		if ( itTrack->numberOfValidHits() < 11 ) continue;
 		if ( itTrack->normalizedChi2() / itTrack->hitPattern().trackerLayersWithMeasurement() > 0.15 ) continue;
 		if ( itTrack->ptError()/itTrack->pt() > pterrorpt_ ) continue;
