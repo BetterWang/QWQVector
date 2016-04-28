@@ -173,6 +173,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( !itTrack->quality(reco::TrackBase::highPurity) ) continue;
 		if ( itTrack->pt() > maxPt_ or itTrack->pt() < minPt_ ) continue;
 		if ( fabs(itTrack->eta()) > 2.4 ) continue;
+		if ( itTrack->eta() > maxEta_ or itTrack->eta() < minEta_ ) continue;
 		if ( itTrack->numberOfValidHits() < 11 ) continue;
 		if ( itTrack->normalizedChi2() / itTrack->hitPattern().trackerLayersWithMeasurement() > 0.15 ) continue;
 		if ( itTrack->ptError()/itTrack->pt() > pterrorpt_ ) continue;
