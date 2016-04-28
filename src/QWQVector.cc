@@ -47,58 +47,61 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 
 
 	edm::Service<TFileService> fs;
-	trV = fs->make<TTree>("trV", "trV");
+	trHF = fs->make<TTree>("trHF", "trHF");
 
-	trV->Branch("pHFw", &t.pHFw, "pHFw/D");
-	trV->Branch("pRe",  &t.pRe,  "pRe/D");
-	trV->Branch("pIm",  &t.pIm,  "pIm/D");
-	trV->Branch("nHFw", &t.nHFw, "nHFw/D");
-	trV->Branch("nRe",  &t.nRe,  "nRe/D");
-	trV->Branch("nIm",  &t.nIm,  "nIm/D");
+	trHF->Branch("pHFw", &t.pHFw, "pHFw/D");
+	trHF->Branch("pRe",  &t.pRe,  "pRe/D");
+	trHF->Branch("pIm",  &t.pIm,  "pIm/D");
+	trHF->Branch("nHFw", &t.nHFw, "nHFw/D");
+	trHF->Branch("nRe",  &t.nRe,  "nRe/D");
+	trHF->Branch("nIm",  &t.nIm,  "nIm/D");
 
-	trV->Branch("pRe2",  &t.pRe2,  "pRe2/D");
-	trV->Branch("pIm2",  &t.pIm2,  "pIm2/D");
-	trV->Branch("nRe2",  &t.nRe2,  "nRe2/D");
-	trV->Branch("nIm2",  &t.nIm2,  "nIm2/D");
+	trHF->Branch("pRe2", &t.pRe2,  "pRe2/D");
+	trHF->Branch("pIm2", &t.pIm2,  "pIm2/D");
+	trHF->Branch("nRe2", &t.nRe2,  "nRe2/D");
+	trHF->Branch("nIm2", &t.nIm2,  "nIm2/D");
 
-	trV->Branch("cent", &(t.Cent), "cent/I");
-	trV->Branch("mult", &(t.Mult), "mult/I");
+	trHF->Branch("cent", &(t.Cent), "cent/I");
+	trHF->Branch("mult", &(t.Mult), "mult/I");
 
-	trV->Branch("rQ1p",  &(qval.rQ1p),  "rQ1p/D");
-	trV->Branch("rQ1p2", &(qval.rQ1p2), "rQ1p2/D");
-	trV->Branch("rQ2p1", &(qval.rQ2p1), "rQ2p1/D");
-	trV->Branch("rQ2p2", &(qval.rQ2p2), "rQ2p2/D");
-	trV->Branch("rQ3p2", &(qval.rQ3p2), "rQ3p2/D");
-	trV->Branch("rQ3p3", &(qval.rQ3p3), "rQ3p3/D");
+	for ( int i = 0; i < 12; i++ ) {
+		trV[i] = fs->make<TTree>(Form("trV%i", i), Form("trV%i",i));
 
-	trV->Branch("rQ1n",  &(qval.rQ1n),  "rQ1n/D");
-	trV->Branch("rQ1n2", &(qval.rQ1n2), "rQ1n2/D");
-	trV->Branch("rQ2n1", &(qval.rQ2n1), "rQ2n1/D");
-	trV->Branch("rQ2n2", &(qval.rQ2n2), "rQ2n2/D");
-	trV->Branch("rQ3n2", &(qval.rQ3n2), "rQ3n2/D");
-	trV->Branch("rQ3n3", &(qval.rQ3n3), "rQ3n3/D");
+		trV[i]->Branch("rQ1p",  &(qval[i].rQ1p),  "rQ1p/D");
+		trV[i]->Branch("rQ1p2", &(qval[i].rQ1p2), "rQ1p2/D");
+		trV[i]->Branch("rQ2p1", &(qval[i].rQ2p1), "rQ2p1/D");
+		trV[i]->Branch("rQ2p2", &(qval[i].rQ2p2), "rQ2p2/D");
+		trV[i]->Branch("rQ3p2", &(qval[i].rQ3p2), "rQ3p2/D");
+		trV[i]->Branch("rQ3p3", &(qval[i].rQ3p3), "rQ3p3/D");
 
-	trV->Branch("iQ1p",  &(qval.iQ1p),  "iQ1p/D");
-	trV->Branch("iQ1p2", &(qval.iQ1p2), "iQ1p2/D");
-	trV->Branch("iQ2p1", &(qval.iQ2p1), "iQ2p1/D");
-	trV->Branch("iQ2p2", &(qval.iQ2p2), "iQ2p2/D");
-	trV->Branch("iQ3p2", &(qval.iQ3p2), "iQ3p2/D");
-	trV->Branch("iQ3p3", &(qval.iQ3p3), "iQ3p3/D");
+		trV[i]->Branch("rQ1n",  &(qval[i].rQ1n),  "rQ1n/D");
+		trV[i]->Branch("rQ1n2", &(qval[i].rQ1n2), "rQ1n2/D");
+		trV[i]->Branch("rQ2n1", &(qval[i].rQ2n1), "rQ2n1/D");
+		trV[i]->Branch("rQ2n2", &(qval[i].rQ2n2), "rQ2n2/D");
+		trV[i]->Branch("rQ3n2", &(qval[i].rQ3n2), "rQ3n2/D");
+		trV[i]->Branch("rQ3n3", &(qval[i].rQ3n3), "rQ3n3/D");
 
-	trV->Branch("iQ1n",  &(qval.iQ1n),  "iQ1n/D");
-	trV->Branch("iQ1n2", &(qval.iQ1n2), "iQ1n2/D");
-	trV->Branch("iQ2n1", &(qval.iQ2n1), "iQ2n1/D");
-	trV->Branch("iQ2n2", &(qval.iQ2n2), "iQ2n2/D");
-	trV->Branch("iQ3n2", &(qval.iQ3n2), "iQ3n2/D");
-	trV->Branch("iQ3n3", &(qval.iQ3n3), "iQ3n3/D");
+		trV[i]->Branch("iQ1p",  &(qval[i].iQ1p),  "iQ1p/D");
+		trV[i]->Branch("iQ1p2", &(qval[i].iQ1p2), "iQ1p2/D");
+		trV[i]->Branch("iQ2p1", &(qval[i].iQ2p1), "iQ2p1/D");
+		trV[i]->Branch("iQ2p2", &(qval[i].iQ2p2), "iQ2p2/D");
+		trV[i]->Branch("iQ3p2", &(qval[i].iQ3p2), "iQ3p2/D");
+		trV[i]->Branch("iQ3p3", &(qval[i].iQ3p3), "iQ3p3/D");
 
-	trV->Branch("wp1",  &(qval.wp1),  "wp1/D");
-	trV->Branch("wp2",  &(qval.wp2),  "wp2/D");
-	trV->Branch("wp3",  &(qval.wp3),  "wp3/D");
+		trV[i]->Branch("iQ1n",  &(qval[i].iQ1n),  "iQ1n/D");
+		trV[i]->Branch("iQ1n2", &(qval[i].iQ1n2), "iQ1n2/D");
+		trV[i]->Branch("iQ2n1", &(qval[i].iQ2n1), "iQ2n1/D");
+		trV[i]->Branch("iQ2n2", &(qval[i].iQ2n2), "iQ2n2/D");
+		trV[i]->Branch("iQ3n2", &(qval[i].iQ3n2), "iQ3n2/D");
+		trV[i]->Branch("iQ3n3", &(qval[i].iQ3n3), "iQ3n3/D");
 
-	trV->Branch("wn1",  &(qval.wn1),  "wn1/D");
-	trV->Branch("wn2",  &(qval.wn2),  "wn2/D");
-	trV->Branch("wn3",  &(qval.wn3),  "wn3/D");
+		trV[i]->Branch("wp1",   &(qval[i].wp1),  "wp1/D");
+		trV[i]->Branch("wp2",   &(qval[i].wp2),  "wp2/D");
+		trV[i]->Branch("wp3",   &(qval[i].wp3),  "wp3/D");
+
+		trV[i]->Branch("wn1",   &(qval[i].wn1),  "wn1/D");
+		trV[i]->Branch("wn2",   &(qval[i].wn2),  "wn2/D");
+		trV[i]->Branch("wn3",   &(qval[i].wn3),  "wn3/D");
 }
 
 
@@ -110,11 +113,14 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	if ( t.Mult == 0 ) return;
 
-	QHelp qh(&qval);
+	trHF->Fill();
 
-	qh.Fill( &t );
-
-	trV->Fill();
+	QHelp qh[12](&qval);
+	for ( int i = 0; i < 12; i++ ) {
+		QHelp qh(&qval[i], -2.4 + i * 0.4, -2.0 + i * 0.4);
+		qh.Fill(&t);
+		trV[i]->Fill();
+	}
 
 	return;
 }

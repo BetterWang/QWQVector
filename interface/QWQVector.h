@@ -61,11 +61,13 @@ typedef struct QValue_ {
 
 class QHelp {
 public:
-	QHelp( QValue* q ) : qval(q), h1{1, -1}, h2{2, -2}, h3{1, 1, -2},
-	       q1p1(h1, true), q1p2(h1, true), q2p2(h2, true), q3p3(h3, true),
-	       q1n1(h1, true), q1n2(h1, true), q2n2(h2, true), q3n3(h3, true) {};
+	QHelp( QValue* q, double eta1, double eta2 ) : qval(q), etaL(eta1), etaH(eta2a),
+		h1{1, -1}, h2{2, -2}, h3{1, 1, -2},
+		q1p1(h1, true), q1p2(h1, true), q2p2(h2, true), q3p3(h3, true),
+		q1n1(h1, true), q1n2(h1, true), q2n2(h2, true), q3n3(h3, true) {};
 	void Fill(QWEvent * const t) {
 		for ( int i = 0; i < t->Mult; i++ ) {
+			if ( t->Eta[i] < etaL and t->Eta[i] > etaH) continue;
 			if ( t->Charge[i] > 0 ) {
 				q1p1.fill(t->Phi[i], 1.);
 				q1p2.fill(t->Phi[i], 1.);
@@ -148,6 +150,7 @@ public:
 
 private:
 	QValue* qval;
+        dobule etaL, etaH;
 	correlations::HarmonicVector h1;
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
@@ -224,8 +227,9 @@ private:
 
 	QWEvent t;
 
-	TTree * trV;
+	TTree * trHF;
+	TTree * trV[12];
 
-	QValue qval;
+	QValue qval[12];
 
 };
