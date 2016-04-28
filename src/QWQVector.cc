@@ -102,6 +102,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 		trV[i]->Branch("wn1",   &(qval[i].wn1),  "wn1/D");
 		trV[i]->Branch("wn2",   &(qval[i].wn2),  "wn2/D");
 		trV[i]->Branch("wn3",   &(qval[i].wn3),  "wn3/D");
+	}
 }
 
 
@@ -115,7 +116,6 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 	trHF->Fill();
 
-	QHelp qh[12](&qval);
 	for ( int i = 0; i < 12; i++ ) {
 		QHelp qh(&qval[i], -2.4 + i * 0.4, -2.0 + i * 0.4);
 		qh.Fill(&t);

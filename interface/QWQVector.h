@@ -61,7 +61,7 @@ typedef struct QValue_ {
 
 class QHelp {
 public:
-	QHelp( QValue* q, double eta1, double eta2 ) : qval(q), etaL(eta1), etaH(eta2a),
+	QHelp( QValue* q, double eta1, double eta2 ) : qval(q), etaL(eta1), etaH(eta2),
 		h1{1, -1}, h2{2, -2}, h3{1, 1, -2},
 		q1p1(h1, true), q1p2(h1, true), q2p2(h2, true), q3p3(h3, true),
 		q1n1(h1, true), q1n2(h1, true), q2n2(h2, true), q3n3(h3, true) {};
@@ -150,7 +150,7 @@ public:
 
 private:
 	QValue* qval;
-        dobule etaL, etaH;
+        double etaL, etaH;
 	correlations::HarmonicVector h1;
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
