@@ -4,6 +4,7 @@
 #include <correlations/closed/FromQVector.hh>
 
 #include <complex>
+#include <vector>
 #include <utility>
 #include "TTree.h"
 
@@ -11,17 +12,17 @@ typedef std::complex<double> Complex;
 // event structure
 const int NMAX_TRK = 10000;
 typedef struct QWEvent_ {
-        int     Cent;
-        int     Mult;
-        double  vz;
-        int     Noff;
-        double  Pt[NMAX_TRK];
-        double  Eta[NMAX_TRK];
-        double  Phi[NMAX_TRK];
-        int     Charge[NMAX_TRK];
-        double  weight[NMAX_TRK];
-        int     RunId;
-        int     EventId;
+	int     Cent;
+	int     Mult;
+	double  vz;
+	int     Noff;
+	double  Pt[NMAX_TRK];
+	double  Eta[NMAX_TRK];
+	double  Phi[NMAX_TRK];
+	int     Charge[NMAX_TRK];
+	double  weight[NMAX_TRK];
+	int     RunId;
+	int     EventId;
 
 	double	pRe;
 	double	pIm;
@@ -36,166 +37,166 @@ typedef struct QWEvent_ {
 	double	nIm2;
 } QWEvent;
 
-// Q Vector helper class
-
 typedef struct QValue_ {
+	std::vector<float> iQ1p,  iQ1n;
+	std::vector<float> iQ1p2, iQ1n2;
+	std::vector<float> iQ2p1, iQ2p2;
+	std::vector<float> iQ2n1, iQ2n2;
+	std::vector<float> iQ3p2, iQ3p3;
+	std::vector<float> iQ3n2, iQ3n3;
+	std::vector<float> iQMp2, iQMn2;
 
-	double iQ1p,  iQ1n;
-	double iQ1p2, iQ1n2;
-	double iQ2p1, iQ2p2;
-	double iQ2n1, iQ2n2;
-	double iQ3p2, iQ3p3;
-	double iQ3n2, iQ3n3;
-	double iQMp2, iQMn2;
+	std::vector<float> rQ1p,  rQ1n;
+	std::vector<float> rQ1p2, rQ1n2;
+	std::vector<float> rQ2p1, rQ2p2;
+	std::vector<float> rQ2n1, rQ2n2;
+	std::vector<float> rQ3p2, rQ3p3;
+	std::vector<float> rQ3n2, rQ3n3;
+	std::vector<float> rQMp2, rQMn2;
 
-	double rQ1p,  rQ1n;
-	double rQ1p2, rQ1n2;
-	double rQ2p1, rQ2p2;
-	double rQ2n1, rQ2n2;
-	double rQ3p2, rQ3p3;
-	double rQ3n2, rQ3n3;
-	double rQMp2, rQMn2;
-
-	double wp1, wn1;
-	double wp2, wn2;
-	double wp3, wn3;
+	std::vector<float> wp1, wn1;
+	std::vector<float> wp2, wn2;
+	std::vector<float> wp3, wn3;
+	QValue_() :
+		iQ1p(12),  iQ1n(12),
+		iQ1p2(12), iQ1n2(12),
+		iQ2p1(12), iQ2p2(12),
+		iQ2n1(12), iQ2n2(12),
+		iQ3p2(12), iQ3p3(12),
+		iQ3n2(12), iQ3n3(12),
+		iQMp2(12), iQMn2(12),
+		rQ1p(12),  rQ1n(12),
+		rQ1p2(12), rQ1n2(12),
+		rQ2p1(12), rQ2p2(12),
+		rQ2n1(12), rQ2n2(12),
+		rQ3p2(12), rQ3p3(12),
+		rQ3n2(12), rQ3n3(12),
+		rQMp2(12), rQMn2(12),
+		wp1(12), wn1(12),
+		wp2(12), wn2(12),
+		wp3(12), wn3(12)
+	{};
 } QValue;
 
 class QHelp {
 public:
-	QHelp( QValue* q, double eta1, double eta2 ) : qval(q), etaL(eta1), etaH(eta2),
+	QHelp( QValue* q ) : qval(q),
 		h1{1, -1}, h2{2, -2}, h3{1, 1, -2}, hM{1,-2},
-		q1p1(h1, true), q1p2(h1, true), q2p2(h2, true), q3p3(h3, true),
-		q1n1(h1, true), q1n2(h1, true), q2n2(h2, true), q3n3(h3, true),
-		qMp2(hM, true), qMn2(hM, true) {};
+		q1p1(12, correlations::QVector(h1, true)),
+		q1p2(12, correlations::QVector(h1, true)),
+		q2p2(12, correlations::QVector(h2, true)),
+		q3p3(12, correlations::QVector(h3, true)),
+		q1n1(12, correlations::QVector(h1, true)),
+		q1n2(12, correlations::QVector(h1, true)),
+		q2n2(12, correlations::QVector(h2, true)),
+		q3n3(12, correlations::QVector(h3, true)),
+		qMp2(12, correlations::QVector(hM, true)),
+		qMn2(12, correlations::QVector(hM, true)) {};
+
 	void Fill(QWEvent * const t) {
 		for ( int i = 0; i < t->Mult; i++ ) {
-			if ( t->Eta[i] < etaL and t->Eta[i] > etaH) continue;
+			int ieta = t->Eta[i]/0.4 + 6;
+			if ( ieta < 0 or ieta >= 12 ) continue;
 			if ( t->Charge[i] > 0 ) {
-				q1p1.fill(t->Phi[i], 1.);
-				q1p2.fill(t->Phi[i], 1.);
-				q2p2.fill(t->Phi[i], 1.);
-				q3p3.fill(t->Phi[i], 1.);
-				qMp2.fill(t->Phi[i], 1.);
+				q1p1[ieta].fill(t->Phi[i], 1.);
+				q1p2[ieta].fill(t->Phi[i], 1.);
+				q2p2[ieta].fill(t->Phi[i], 1.);
+				q3p3[ieta].fill(t->Phi[i], 1.);
+				qMp2[ieta].fill(t->Phi[i], 1.);
 			} else {
-				q1n1.fill(t->Phi[i], 1.);
-				q1n2.fill(t->Phi[i], 1.);
-				q2n2.fill(t->Phi[i], 1.);
-				q3n3.fill(t->Phi[i], 1.);
-				qMn2.fill(t->Phi[i], 1.);
+				q1n1[ieta].fill(t->Phi[i], 1.);
+				q1n2[ieta].fill(t->Phi[i], 1.);
+				q2n2[ieta].fill(t->Phi[i], 1.);
+				q3n3[ieta].fill(t->Phi[i], 1.);
+				qMn2[ieta].fill(t->Phi[i], 1.);
 			}
 		}
-		GetQ();
-	};
 
-	void GetQ() {
-		correlations::closed::FromQVector cq1p1(q1p1);
-		correlations::closed::FromQVector cq1p2(q1p2);
-		correlations::closed::FromQVector cq2p2(q2p2);
-		correlations::closed::FromQVector cq3p3(q3p3);
-		correlations::closed::FromQVector cq1n1(q1n1);
-		correlations::closed::FromQVector cq1n2(q1n2);
-		correlations::closed::FromQVector cq2n2(q2n2);
-		correlations::closed::FromQVector cq3n3(q3n3);
+		for ( int i = 0; i < 12; i++ ) {
+			correlations::closed::FromQVector cq1p1(q1p1[i]);
+			correlations::closed::FromQVector cq1p2(q1p2[i]);
+			correlations::closed::FromQVector cq2p2(q2p2[i]);
+			correlations::closed::FromQVector cq3p3(q3p3[i]);
+			correlations::closed::FromQVector cq1n1(q1n1[i]);
+			correlations::closed::FromQVector cq1n2(q1n2[i]);
+			correlations::closed::FromQVector cq2n2(q2n2[i]);
+			correlations::closed::FromQVector cq3n3(q3n3[i]);
+			correlations::closed::FromQVector cqMp2(qMp2[i]);
+			correlations::closed::FromQVector cqMn2(qMn2[i]);
 
-		correlations::closed::FromQVector cqMp2(qMp2);
-		correlations::closed::FromQVector cqMn2(qMn2);
+			correlations::Result r1p1 = cq1p1.calculate(1, h1);
+			correlations::Result r1n1 = cq1n1.calculate(1, h1);
+			correlations::Result r1p2 = cq1p2.calculate(2, h1);
+			correlations::Result r1n2 = cq1n2.calculate(2, h1);
 
-		correlations::Result r1p1 = cq1p1.calculate(1, h1);
-		correlations::Result r1n1 = cq1n1.calculate(1, h1);
-		correlations::Result r1p2 = cq1p2.calculate(2, h1);
-		correlations::Result r1n2 = cq1n2.calculate(2, h1);
+			correlations::Result r2p1 = cq2p2.calculate(1, h2);
+			correlations::Result r2p2 = cq2p2.calculate(2, h2);
+			correlations::Result r2n1 = cq2n2.calculate(1, h2);
+			correlations::Result r2n2 = cq2n2.calculate(2, h2);
 
-		correlations::Result r2p1 = cq2p2.calculate(1, h2);
-		correlations::Result r2p2 = cq2p2.calculate(2, h2);
-		correlations::Result r2n1 = cq2n2.calculate(1, h2);
-		correlations::Result r2n2 = cq2n2.calculate(2, h2);
+			correlations::Result r3p2 = cq3p3.calculate(2, h3);
+			correlations::Result r3p3 = cq3p3.calculate(3, h3);
+			correlations::Result r3n2 = cq3n3.calculate(2, h3);
+			correlations::Result r3n3 = cq3n3.calculate(3, h3);
 
-		correlations::Result r3p2 = cq3p3.calculate(2, h3);
-		correlations::Result r3p3 = cq3p3.calculate(3, h3);
-		correlations::Result r3n2 = cq3n3.calculate(2, h3);
-		correlations::Result r3n3 = cq3n3.calculate(3, h3);
+			correlations::Result rMp2 = cqMp2.calculate(2, hM);
+			correlations::Result rMn2 = cqMn2.calculate(2, hM);
 
-		correlations::Result rMp2 = cqMp2.calculate(2, hM);
-		correlations::Result rMn2 = cqMn2.calculate(2, hM);
+			qval->rQ1p [i] = r1p1.sum().real();
+			qval->rQ1n [i] = r1n1.sum().real();
+			qval->rQ1p2[i] = r1p2.sum().real();
+			qval->rQ1n2[i] = r1n2.sum().real();
 
-		qval->rQ1p  = r1p1.sum().real();
-		qval->rQ1n  = r1n1.sum().real();
-		qval->rQ1p2 = r1p2.sum().real();
-		qval->rQ1n2 = r1n2.sum().real();
+			qval->rQ2p1[i] = r2p1.sum().real();
+			qval->rQ2p2[i] = r2p2.sum().real();
+			qval->rQ2n1[i] = r2n1.sum().real();
+			qval->rQ2n2[i] = r2n2.sum().real();
 
-		qval->rQ2p1 = r2p1.sum().real();
-		qval->rQ2p2 = r2p2.sum().real();
-		qval->rQ2n1 = r2n1.sum().real();
-		qval->rQ2n2 = r2n2.sum().real();
+			qval->rQ3p2[i] = r3p2.sum().real();
+			qval->rQ3p3[i] = r3p3.sum().real();
+			qval->rQ3n2[i] = r3n2.sum().real();
+			qval->rQ3n3[i] = r3n3.sum().real();
 
-		qval->rQ3p2 = r3p2.sum().real();
-		qval->rQ3p3 = r3p3.sum().real();
-		qval->rQ3n2 = r3n2.sum().real();
-		qval->rQ3n3 = r3n3.sum().real();
+			qval->iQ1p [i] = r1p1.sum().imag();
+			qval->iQ1n [i] = r1n1.sum().imag();
+			qval->iQ1p2[i] = r1p2.sum().imag();
+			qval->iQ1n2[i] = r1n2.sum().imag();
 
-		qval->iQ1p  = r1p1.sum().imag();
-		qval->iQ1n  = r1n1.sum().imag();
-		qval->iQ1p2 = r1p2.sum().imag();
-		qval->iQ1n2 = r1n2.sum().imag();
+			qval->iQ2p1[i] = r2p1.sum().imag();
+			qval->iQ2p2[i] = r2p2.sum().imag();
+			qval->iQ2n1[i] = r2n1.sum().imag();
+			qval->iQ2n2[i] = r2n2.sum().imag();
 
-		qval->iQ2p1 = r2p1.sum().imag();
-		qval->iQ2p2 = r2p2.sum().imag();
-		qval->iQ2n1 = r2n1.sum().imag();
-		qval->iQ2n2 = r2n2.sum().imag();
+			qval->iQ3p2[i] = r3p2.sum().imag();
+			qval->iQ3p3[i] = r3p3.sum().imag();
+			qval->iQ3n2[i] = r3n2.sum().imag();
+			qval->iQ3n3[i] = r3n3.sum().imag();
 
-		qval->iQ3p2 = r3p2.sum().imag();
-		qval->iQ3p3 = r3p3.sum().imag();
-		qval->iQ3n2 = r3n2.sum().imag();
-		qval->iQ3n3 = r3n3.sum().imag();
+			qval->rQMp2[i] = rMp2.sum().real();
+			qval->iQMp2[i] = rMp2.sum().imag();
+			qval->rQMn2[i] = rMn2.sum().real();
+			qval->iQMn2[i] = rMn2.sum().imag();
 
-		qval->rQMp2 = rMp2.sum().real();
-		qval->iQMp2 = rMp2.sum().imag();
-		qval->rQMn2 = rMn2.sum().real();
-		qval->iQMn2 = rMn2.sum().imag();
-
-		qval->wp1 = r1p1.weight();
-		qval->wn1 = r1n1.weight();
-		qval->wp2 = r2p2.weight();
-		qval->wn2 = r2n2.weight();
-		qval->wp3 = r3p3.weight();
-		qval->wn3 = r3n3.weight();
-
+			qval->wp1[i] = r1p1.weight();
+			qval->wn1[i] = r1n1.weight();
+			qval->wp2[i] = r2p2.weight();
+			qval->wn2[i] = r2n2.weight();
+			qval->wp3[i] = r3p3.weight();
+			qval->wn3[i] = r3n3.weight();
+		}
 	};
 
 private:
 	QValue* qval;
-        double etaL, etaH;
 	correlations::HarmonicVector h1;
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
 	correlations::HarmonicVector hM;
-	correlations::QVector	q1p1, q1p2, q2p2, q3p3;
-	correlations::QVector	q1n1, q1n2, q2n2, q3n3;
-	correlations::QVector	qMp2, qMn2;
+	std::vector<correlations::QVector>	q1p1, q1p2, q2p2, q3p3;
+	std::vector<correlations::QVector>	q1n1, q1n2, q2n2, q3n3;
+	std::vector<correlations::QVector>	qMp2, qMn2;
 };
 
-class QVector {
-public:
-	QVector(int N):N_(N), q_(0,0), weight_(0){};
-	QVector(int N, double x, double y, double w):N_(N), q_(x,y), weight_(w){};
-	void AddParticle(double phi, double w=1.) {
-		q_ += w * Complex(cos(N_*phi), sin(N_*phi));
-		weight_ += w;
-	};
-	void RemoveParticle(double phi, double w) {
-		q_ -= w * Complex(cos(N_*phi), sin(N_*phi));
-		weight_ -= w;
-	};
-	Complex GetQ() {return q_;};
-	double GetW() {return weight_;};
-	int GetN() { return N_; };
-
-private:
-	int N_;
-	Complex q_;
-	double weight_;
-};
 
 class QWQVector : public edm::EDAnalyzer {
 public:
@@ -242,9 +243,8 @@ private:
 
 	QWEvent t;
 
-	TTree * trHF;
-	TTree * trV[12];
+	TTree * trV;
 
-	QValue qval[12];
+	QValue qval;
 
 };
