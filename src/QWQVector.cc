@@ -92,10 +92,10 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("iQ3n2", &(qval.iQ3n2), "iQ3n2/D");
 	trV->Branch("iQ3n3", &(qval.iQ3n3), "iQ3n3/D");
 
-	trV->Branch("rQMp2", &(qval.rQMp2), "rQMp2/D",);
-	trV->Branch("rQMn2", &(qval.rQMn2), "rQMn2/D",);
-	trV->Branch("iQMp2", &(qval.iQMp2), "iQMp2/D",);
-	trV->Branch("iQMn2", &(qval.iQMn2), "iQMn2/D",);
+	trV->Branch("rQMp2", &(qval.rQMp2), "rQMp2/D");
+	trV->Branch("rQMn2", &(qval.rQMn2), "rQMn2/D");
+	trV->Branch("iQMp2", &(qval.iQMp2), "iQMp2/D");
+	trV->Branch("iQMn2", &(qval.iQMn2), "iQMn2/D");
 
 	trV->Branch("wp1",   &(qval.wp1), "wp1/D");
 	trV->Branch("wp2",   &(qval.wp2), "wp2/D");
@@ -176,7 +176,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( itTrack->charge() == 0 ) continue;
 		if ( !itTrack->quality(reco::TrackBase::highPurity) ) continue;
 		if ( itTrack->pt() > maxPt_ or itTrack->pt() < minPt_ ) continue;
-		if ( itTrack->eta() > etaMax or itTrack->eta() < etaMin ) continue;
+		if ( itTrack->eta() > maxEta_ or itTrack->eta() < minEta_ ) continue;
 		if ( itTrack->numberOfValidHits() < 11 ) continue;
 		if ( itTrack->normalizedChi2() / itTrack->hitPattern().trackerLayersWithMeasurement() > 0.15 ) continue;
 		if ( itTrack->ptError()/itTrack->pt() > pterrorpt_ ) continue;

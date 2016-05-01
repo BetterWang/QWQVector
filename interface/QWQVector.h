@@ -57,8 +57,7 @@ typedef struct QValue_ {
 	double wp1, wn1;
 	double wp2, wn2;
 	double wp3, wn3;
-	QValue_() :
-	{};
+	QValue_(){};
 } QValue;
 
 class QHelp {
@@ -171,9 +170,9 @@ private:
 	correlations::HarmonicVector h2;
 	correlations::HarmonicVector h3;
 	correlations::HarmonicVector hM;
-	std::vector<correlations::QVector>	q1p1, q1p2, q2p2, q3p3;
-	std::vector<correlations::QVector>	q1n1, q1n2, q2n2, q3n3;
-	std::vector<correlations::QVector>	qMp2, qMn2;
+	correlations::QVector	q1p1, q1p2, q2p2, q3p3;
+	correlations::QVector	q1n1, q1n2, q2n2, q3n3;
+	correlations::QVector	qMp2, qMn2;
 };
 
 
