@@ -39,6 +39,8 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	pterrorpt_ = iConfig.getUntrackedParameter<double>("pterrorpt", 0.1);
 	minvz_ = iConfig.getUntrackedParameter<double>("minvz", -1.);
 	maxvz_ = iConfig.getUntrackedParameter<double>("maxvz", 15.);
+	minEta_ = iConfig.getUntrackedParameter<double>("minEta", -2.4);
+	maxEta_ = iConfig.getUntrackedParameter<double>("maxEta", 2.4);
 
 	minCent_ = iConfig.getUntrackedParameter<int>("minCent", -1);
 	maxCent_ = iConfig.getUntrackedParameter<int>("maxCent", 500);
@@ -62,46 +64,46 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	trV->Branch("cent", &(t.Cent), "cent/I");
 	trV->Branch("mult", &(t.Mult), "mult/I");
 
-	trV->Branch("rQ1p",  &(qval.rQ1p)  );
-	trV->Branch("rQ1p2", &(qval.rQ1p2) );
-	trV->Branch("rQ2p1", &(qval.rQ2p1) );
-	trV->Branch("rQ2p2", &(qval.rQ2p2) );
-	trV->Branch("rQ3p2", &(qval.rQ3p2) );
-	trV->Branch("rQ3p3", &(qval.rQ3p3) );
+	trV->Branch("rQ1p" , &(qval.rQ1p) , "rQ1p/D" );
+	trV->Branch("rQ1p2", &(qval.rQ1p2), "rQ1p2/D");
+	trV->Branch("rQ2p1", &(qval.rQ2p1), "rQ2p1/D");
+	trV->Branch("rQ2p2", &(qval.rQ2p2), "rQ2p2/D");
+	trV->Branch("rQ3p2", &(qval.rQ3p2), "rQ3p2/D");
+	trV->Branch("rQ3p3", &(qval.rQ3p3), "rQ3p3/D");
 
-	trV->Branch("rQ1n",  &(qval.rQ1n)  );
-	trV->Branch("rQ1n2", &(qval.rQ1n2) );
-	trV->Branch("rQ2n1", &(qval.rQ2n1) );
-	trV->Branch("rQ2n2", &(qval.rQ2n2) );
-	trV->Branch("rQ3n2", &(qval.rQ3n2) );
-	trV->Branch("rQ3n3", &(qval.rQ3n3) );
+	trV->Branch("rQ1n" , &(qval.rQ1n) , "rQ1n/D" );
+	trV->Branch("rQ1n2", &(qval.rQ1n2), "rQ1n2/D");
+	trV->Branch("rQ2n1", &(qval.rQ2n1), "rQ2n1/D");
+	trV->Branch("rQ2n2", &(qval.rQ2n2), "rQ2n2/D");
+	trV->Branch("rQ3n2", &(qval.rQ3n2), "rQ3n2/D");
+	trV->Branch("rQ3n3", &(qval.rQ3n3), "rQ3n3/D");
 
-	trV->Branch("iQ1p",  &(qval.iQ1p)  );
-	trV->Branch("iQ1p2", &(qval.iQ1p2) );
-	trV->Branch("iQ2p1", &(qval.iQ2p1) );
-	trV->Branch("iQ2p2", &(qval.iQ2p2) );
-	trV->Branch("iQ3p2", &(qval.iQ3p2) );
-	trV->Branch("iQ3p3", &(qval.iQ3p3) );
+	trV->Branch("iQ1p" , &(qval.iQ1p) , "iQ1p/D" );
+	trV->Branch("iQ1p2", &(qval.iQ1p2), "iQ1p2/D");
+	trV->Branch("iQ2p1", &(qval.iQ2p1), "iQ2p1/D");
+	trV->Branch("iQ2p2", &(qval.iQ2p2), "iQ2p2/D");
+	trV->Branch("iQ3p2", &(qval.iQ3p2), "iQ3p2/D");
+	trV->Branch("iQ3p3", &(qval.iQ3p3), "iQ3p3/D");
 
-	trV->Branch("iQ1n",  &(qval.iQ1n)  );
-	trV->Branch("iQ1n2", &(qval.iQ1n2) );
-	trV->Branch("iQ2n1", &(qval.iQ2n1) );
-	trV->Branch("iQ2n2", &(qval.iQ2n2) );
-	trV->Branch("iQ3n2", &(qval.iQ3n2) );
-	trV->Branch("iQ3n3", &(qval.iQ3n3) );
+	trV->Branch("iQ1n" , &(qval.iQ1n) , "iQ1n/D" );
+	trV->Branch("iQ1n2", &(qval.iQ1n2), "iQ1n2/D");
+	trV->Branch("iQ2n1", &(qval.iQ2n1), "iQ2n1/D");
+	trV->Branch("iQ2n2", &(qval.iQ2n2), "iQ2n2/D");
+	trV->Branch("iQ3n2", &(qval.iQ3n2), "iQ3n2/D");
+	trV->Branch("iQ3n3", &(qval.iQ3n3), "iQ3n3/D");
 
-	trV->Branch("rQMp2", &(qval.rQMp2) );
-	trV->Branch("rQMn2", &(qval.rQMn2) );
-	trV->Branch("iQMp2", &(qval.iQMp2) );
-	trV->Branch("iQMn2", &(qval.iQMn2) );
+	trV->Branch("rQMp2", &(qval.rQMp2), "rQMp2/D",);
+	trV->Branch("rQMn2", &(qval.rQMn2), "rQMn2/D",);
+	trV->Branch("iQMp2", &(qval.iQMp2), "iQMp2/D",);
+	trV->Branch("iQMn2", &(qval.iQMn2), "iQMn2/D",);
 
-	trV->Branch("wp1",   &(qval.wp1) );
-	trV->Branch("wp2",   &(qval.wp2) );
-	trV->Branch("wp3",   &(qval.wp3) );
+	trV->Branch("wp1",   &(qval.wp1), "wp1/D");
+	trV->Branch("wp2",   &(qval.wp2), "wp2/D");
+	trV->Branch("wp3",   &(qval.wp3), "wp3/D");
 
-	trV->Branch("wn1",   &(qval.wn1) );
-	trV->Branch("wn2",   &(qval.wn2) );
-	trV->Branch("wn3",   &(qval.wn3) );
+	trV->Branch("wn1",   &(qval.wn1), "wn1/D");
+	trV->Branch("wn2",   &(qval.wn2), "wn2/D");
+	trV->Branch("wn3",   &(qval.wn3), "wn3/D");
 }
 
 
@@ -174,7 +176,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( itTrack->charge() == 0 ) continue;
 		if ( !itTrack->quality(reco::TrackBase::highPurity) ) continue;
 		if ( itTrack->pt() > maxPt_ or itTrack->pt() < minPt_ ) continue;
-		if ( fabs(itTrack->eta()) > 2.4 ) continue;
+		if ( itTrack->eta() > etaMax or itTrack->eta() < etaMin ) continue;
 		if ( itTrack->numberOfValidHits() < 11 ) continue;
 		if ( itTrack->normalizedChi2() / itTrack->hitPattern().trackerLayersWithMeasurement() > 0.15 ) continue;
 		if ( itTrack->ptError()/itTrack->pt() > pterrorpt_ ) continue;
