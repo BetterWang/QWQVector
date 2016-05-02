@@ -78,17 +78,17 @@ public:
 	void Fill(QWEvent * const t) {
 		for ( int i = 0; i < t->Mult; i++ ) {
 			if ( t->Charge[i] > 0 ) {
-				q1p1.fill(t->Phi[i], 1.);
-				q1p2.fill(t->Phi[i], 1.);
-				q2p2.fill(t->Phi[i], 1.);
-				q3p3.fill(t->Phi[i], 1.);
-				qMp2.fill(t->Phi[i], 1.);
+				q1p1.fill(t->Phi[i], t->weight[i]);
+				q1p2.fill(t->Phi[i], t->weight[i]);
+				q2p2.fill(t->Phi[i], t->weight[i]);
+				q3p3.fill(t->Phi[i], t->weight[i]);
+				qMp2.fill(t->Phi[i], t->weight[i]);
 			} else {
-				q1n1.fill(t->Phi[i], 1.);
-				q1n2.fill(t->Phi[i], 1.);
-				q2n2.fill(t->Phi[i], 1.);
-				q3n3.fill(t->Phi[i], 1.);
-				qMn2.fill(t->Phi[i], 1.);
+				q1n1.fill(t->Phi[i], t->weight[i]);
+				q1n2.fill(t->Phi[i], t->weight[i]);
+				q2n2.fill(t->Phi[i], t->weight[i]);
+				q3n3.fill(t->Phi[i], t->weight[i]);
+				qMn2.fill(t->Phi[i], t->weight[i]);
 			}
 		}
 
@@ -195,8 +195,10 @@ private:
 	void analyzeData(const edm::Event&, const edm::EventSetup&);
 	void analyzeMC(const edm::Event&, const edm::EventSetup&);
 
+	void overRide();
 
 	bool bGen_;
+	bool bSim_;
 
 	double minPt_;
 	double maxPt_;

@@ -25,6 +25,7 @@
 
 QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	  bGen_(iConfig.getUntrackedParameter<bool>("bGen", false))
+	, bSim_(iConfig.getUntrackedParameter<bool>("bSim", false))
 	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
 	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality")) )
@@ -113,6 +114,8 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	if ( bGen_ ) analyzeMC(iEvent, iSetup);
 	else analyzeData(iEvent, iSetup);
 
+	if ( bSim_ ) overRide();
+
 	if ( t.Mult == 0 ) return;
 
 	QHelp qh(&qval);
@@ -127,6 +130,45 @@ void QWQVector::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 QWQVector::~QWQVector()
 {
 	return;
+}
+
+//////////////////
+void QWQVector::overRide()
+{
+	t.Mult = 7;
+	t.Cent = 150;
+	t.Charge[0] = 1;
+	t.Charge[1] = 1;
+	t.Charge[2] = 1;
+	t.Charge[3] = -1;
+	t.Charge[4] = -1;
+	t.Charge[5] = -1;
+	t.Charge[6] = -1;
+
+	t.Eta[0] = 0;
+	t.Eta[1] = 0;
+	t.Eta[2] = 0;
+	t.Eta[3] = 0;
+	t.Eta[4] = 0;
+	t.Eta[5] = 0;
+	t.Eta[6] = 0;
+	t.Eta[7] = 0;
+
+	t.Phi[0] = 0;
+	t.Phi[1] = 3.1;
+	t.Phi[2] = 0.1;
+	t.Phi[3] = 0.;
+	t.Phi[4] = 0.1;
+	t.Phi[5] = -3.1;
+	t.Phi[6] = 3.1;
+
+	t.weight[0] = 1;
+	t.weight[1] = 1;
+	t.weight[2] = 1;
+	t.weight[3] = 1;
+	t.weight[4] = 1;
+	t.weight[5] = 1;
+	t.weight[6] = 1;
 }
 
 //////////////////
@@ -195,6 +237,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		t.Pt[t.Mult] = itTrack->pt();
 		t.Eta[t.Mult] = itTrack->eta();
 		t.Phi[t.Mult] = itTrack->phi();
+		t.weight[t.Mult] = 1.0;
 		t.Mult++;
 	}
 
