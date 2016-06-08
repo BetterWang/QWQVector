@@ -19,6 +19,7 @@
 #include "DataFormats/HeavyIonEvent/interface/EvtPlane.h"
 #include "RecoHI/HiEvtPlaneAlgos/interface/HiEvtPlaneList.h"
 
+#include "FWCore/Utilities/interface/RandomNumberGenerator.h"
 #include "CLHEP/Random/RandFlat.h"
 
 #include "QWAna/QWQVector/interface/QWQVector.h"
