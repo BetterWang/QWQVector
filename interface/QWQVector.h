@@ -199,6 +199,7 @@ private:
 
 	bool bGen_;
 	bool bSim_;
+	bool bRandQ_;
 
 	double minPt_;
 	double maxPt_;

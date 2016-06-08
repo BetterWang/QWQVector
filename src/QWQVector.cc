@@ -19,6 +19,7 @@
 #include "DataFormats/HeavyIonEvent/interface/EvtPlane.h"
 #include "RecoHI/HiEvtPlaneAlgos/interface/HiEvtPlaneList.h"
 
+#include "CLHEP/Random/RandFlat.h"
 
 #include "QWAna/QWQVector/interface/QWQVector.h"
 
@@ -26,6 +27,7 @@
 QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	  bGen_(iConfig.getUntrackedParameter<bool>("bGen", false))
 	, bSim_(iConfig.getUntrackedParameter<bool>("bSim", false))
+	, bRandQ_(iConfig.getUntrackedParameter<bool>("bRandQ", false))
 	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
 	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality")) )
@@ -233,7 +235,17 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 
 		if ( find( algoParameters_.begin(), algoParameters_.end(), itTrack->originalAlgo() ) == algoParameters_.end() ) continue;
 
-		t.Charge[t.Mult] = itTrack->charge();
+		if ( bRandQ_ ) {
+			edm::Service<edm::RandomNumberGenerator> rng;
+			CLHEP::HepRandomEngine* engine = &rng->getEngine(iEvent.streamID());
+			if ( CLHEP::RandFlat::shoot(engine) > 0.5 ) {
+				t.Charge[t.Mult] = 1;
+			} else {
+				t.Charge[t.Mult] = -1;
+			}
+		} else {
+			t.Charge[t.Mult] = itTrack->charge();
+		}
 		t.Pt[t.Mult] = itTrack->pt();
 		t.Eta[t.Mult] = itTrack->eta();
 		t.Phi[t.Mult] = itTrack->phi();
