@@ -31,6 +31,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	, bRandQ_(iConfig.getUntrackedParameter<bool>("bRandQ", false))
 	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
+	, randq_pos_(iConfig.getUntrackedParameter<double>("randq_pos", 0.5))
 	, centralityToken_( consumes<int>(iConfig.getParameter<edm::InputTag>("centrality")) )
 	, trackToken_(consumes<reco::TrackCollection>(iConfig.getUntrackedParameter<edm::InputTag>("trackTag")))
 	, algoParameters_(iConfig.getParameter<std::vector<int> >("algoParameters"))
@@ -239,7 +240,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( bRandQ_ ) {
 			edm::Service<edm::RandomNumberGenerator> rng;
 			CLHEP::HepRandomEngine* engine = &rng->getEngine(iEvent.streamID());
-			if ( CLHEP::RandFlat::shoot(engine) > 0.5 ) {
+			if ( CLHEP::RandFlat::shoot(engine) > randq_pos_ ) {
 				t.Charge[t.Mult] = 1;
 			} else {
 				t.Charge[t.Mult] = -1;

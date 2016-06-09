@@ -203,6 +203,7 @@ private:
 
 	double minPt_;
 	double maxPt_;
+	double randq_pos_;
 
 	edm::EDGetTokenT<int>                           centralityToken_;
 	edm::EDGetTokenT<reco::TrackCollection>		trackToken_;
