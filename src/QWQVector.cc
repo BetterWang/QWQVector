@@ -240,7 +240,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( bRandQ_ ) {
 			edm::Service<edm::RandomNumberGenerator> rng;
 			CLHEP::HepRandomEngine* engine = &rng->getEngine(iEvent.streamID());
-			if ( CLHEP::RandFlat::shoot(engine) > randq_pos_ ) {
+			if ( CLHEP::RandFlat::shoot(engine) < randq_pos_ ) {
 				t.Charge[t.Mult] = 1;
 			} else {
 				t.Charge[t.Mult] = -1;
