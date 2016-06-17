@@ -22,6 +22,40 @@ config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Coll
 config.Data.publication = False
 config.Data.useParent = False
 config.Site.storageSite = 'T2_CH_CERN'
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
+
+
+# HIMB1
+config.General.requestName = 'HIMB1_QVector_v5'
+config.Data.inputDataset =  '/HIMinimumBias1/HIRun2015-PromptReco-v1/AOD'
+config.Data.inputDBS = 'global'
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
+
+# HIMB2
+config.General.requestName = 'HIMB2_QVector_v5'
+config.Data.inputDataset =  '/HIMinimumBias2/HIRun2015-PromptReco-v1/AOD'
+config.Data.inputDBS = 'global'
+try:
+        crabCommand('submit', config = config)
+except HTTPException as hte:
+        print "Failed submitting task: %s" % (hte.headers)
+except ClientException as cle:
+        print "Failed submitting task: %s" % (cle)
+
+# HIMB4
+config.General.requestName = 'HIMB4_QVector_v5'
+config.Data.inputDataset =  '/HIMinimumBias4/HIRun2015-PromptReco-v1/AOD'
+config.Data.inputDBS = 'global'
 try:
         crabCommand('submit', config = config)
 except HTTPException as hte:
