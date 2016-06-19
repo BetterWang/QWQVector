@@ -31,7 +31,7 @@ config.Site.storageSite = 'T2_CH_CERN'
 
 
 # HIMB1
-config.General.requestName = 'HIMB1_QVector_randq_v1'
+config.General.requestName = 'HIMB1_QVector_randq_v1_hlt'
 config.Data.inputDataset =  '/HIMinimumBias1/HIRun2015-PromptReco-v1/AOD'
 config.Data.inputDBS = 'global'
 try:
@@ -45,21 +45,21 @@ except ClientException as cle:
 config.General.requestName = 'HIMB2_QVector_randq_v1'
 config.Data.inputDataset =  '/HIMinimumBias2/HIRun2015-PromptReco-v1/AOD'
 config.Data.inputDBS = 'global'
-try:
-        crabCommand('submit', config = config)
-except HTTPException as hte:
-        print "Failed submitting task: %s" % (hte.headers)
-except ClientException as cle:
-        print "Failed submitting task: %s" % (cle)
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
 
 # HIMB4
 config.General.requestName = 'HIMB4_QVector_randq_v1'
 config.Data.inputDataset =  '/HIMinimumBias4/HIRun2015-PromptReco-v1/AOD'
 config.Data.inputDBS = 'global'
-try:
-        crabCommand('submit', config = config)
-except HTTPException as hte:
-        print "Failed submitting task: %s" % (hte.headers)
-except ClientException as cle:
-        print "Failed submitting task: %s" % (cle)
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
 

@@ -40,8 +40,8 @@ import HLTrigger.HLTfilters.hltHighLevel_cfi
 
 process.hltMB = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
 process.hltMB.HLTPaths = [
-	"HLT_HIL1MinimumBiasHF2AND*",
-	"HLT_HIL1MinimumBiasHF1AND*",
+	"HLT_HIL1MinimumBiasHF2AND_*",
+	"HLT_HIL1MinimumBiasHF1AND_*",
 ]
 process.hltMB.andOr = cms.bool(True)
 process.hltMB.throw = cms.bool(False)
