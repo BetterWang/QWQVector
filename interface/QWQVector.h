@@ -2,6 +2,8 @@
 #include <correlations/Result.hh>
 #include <correlations/QVector.hh>
 #include <correlations/closed/FromQVector.hh>
+// for the fuxking pp rereco centrality
+#include "DataFormats/CaloTowers/interface/CaloTowerCollection.h"
 
 #include <complex>
 #include <vector>
@@ -199,6 +201,7 @@ private:
 
 	bool bGen_;
 	bool bSim_;
+	bool bPPreco_;
 	bool bRandQ_;
 
 	double minPt_;
@@ -210,6 +213,7 @@ private:
 	std::vector<int>				algoParameters_;
 	edm::EDGetTokenT<reco::VertexCollection>	vertexToken_;
 	edm::EDGetTokenT<reco::EvtPlaneCollection>      epToken_;
+	edm::EDGetTokenT<CaloTowerCollection>		towerToken_;
 
 
 	double	dzdzerror_;
