@@ -30,6 +30,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	, bSim_(iConfig.getUntrackedParameter<bool>("bSim", false))
 	, bPPreco_(iConfig.getUntrackedParameter<bool>("bPPreco", false))
 	, bRandQ_(iConfig.getUntrackedParameter<bool>("bRandQ", false))
+	, bEff_(iConfig.getUntrackedParameter<bool>("bEff", false))
 	, minPt_(iConfig.getUntrackedParameter<double>("minPt", 1.0))
 	, maxPt_(iConfig.getUntrackedParameter<double>("maxPt", 3.0))
 	, randq_pos_(iConfig.getUntrackedParameter<double>("randq_pos", 0.5))
@@ -38,6 +39,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 	, algoParameters_(iConfig.getParameter<std::vector<int> >("algoParameters"))
 	, vertexToken_( consumes<reco::VertexCollection>(iConfig.getUntrackedParameter<edm::InputTag>("vertexSrc")) )
 	, epToken_( consumes<reco::EvtPlaneCollection>(iConfig.getUntrackedParameter<edm::InputTag>("epSrc", std::string("hiEvtPlane") )) )
+	, fweight_( iConfig.getUntrackedParameter<edm::InputTag>("fweight", std::string("NA")) )
 {
 
 	dzdzerror_ = iConfig.getUntrackedParameter<double>("dzdzerror", 3.);
@@ -55,6 +57,26 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 		towerToken_ = consumes<CaloTowerCollection>(iConfig.getUntrackedParameter<edm::InputTag>("towerMaker"));
 	}
 
+	std::string streff = fweight_.label();
+	if ( streff == std::string("NA") ) {
+		std::cout << "!!! eff NA" << std::endl;
+		bEff_ = false;
+	} else {
+		TFile * fEffFak = new TFile(streff.c_str());
+		std::cout << "!!! Using particle weight " << streff << std::endl;
+		if ( bEff_ ) {
+			std::cout << "!!! Apply Eff correction" << std::endl;
+			for ( int i = 0; i < 20; i++ ) {
+				if ( streff == std::string("Hydjet_eff_mult_v1.root") ) {
+					TH2D * h = (TH2D*) fEffFak->Get("rTotalEff3D_1");
+					for ( int c = 0; c < 200; c++ ) {
+						hEff_cbin[c] = h;
+					}
+				}
+			}
+			std::cout << "!!! eff histo done" << std::endl;
+		}
+	}
 
 	edm::Service<TFileService> fs;
 	trV = fs->make<TTree>("trV", "trV");
@@ -73,6 +95,7 @@ QWQVector::QWQVector(const edm::ParameterSet& iConfig):
 
 	trV->Branch("cent", &(t.Cent), "cent/I");
 	trV->Branch("mult", &(t.Mult), "mult/I");
+	trV->Branch("noff", &(t.Noff), "mult/I");
 
 	trV->Branch("rQ1p" , &(qval.rQ1p) , "rQ1p/D" );
 	trV->Branch("rQ1p2", &(qval.rQ1p2), "rQ1p2/D");
@@ -183,6 +206,57 @@ void QWQVector::overRide()
 }
 
 //////////////////
+//int QWQVector::getNoffCent(const edm::Event& iEvent, const edm::EventSetup& iSetup, int& Noff)
+//{
+//	// very hard coded Noff track centrality cut
+//	using namespace edm;
+//	using namespace reco;
+//	//      int Noff = 0;
+//
+//	Handle<VertexCollection> vertexCollection;
+//	iEvent.getByToken(vertexToken_, vertexCollection);
+//	const VertexCollection * recoVertices = vertexCollection.product();
+//
+//	if ( recoVertices.size() < 1 ) return;
+//	sort(recoVertices.begin(), recoVertices.end(), [](const reco::Vertex &a, const reco::Vertex &b){
+//			if ( a.tracksSize() == b.tracksSize() ) return a.chi2() < b.chi2() ? true:false;
+//			return a.tracksSize() > b.tracksSize() ? true:false;
+//			});
+//
+//	int primaryvtx = 0;
+//	math::XYZPoint v1( (*recoVertices)[primaryvtx].position().x(), (*recoVertices)[primaryvtx].position().y(), (*recoVertices)[primaryvtx].position().z() );
+//	double vxError = (*recoVertices)[primaryvtx].xError();
+//	double vyError = (*recoVertices)[primaryvtx].yError();
+//	double vzError = (*recoVertices)[primaryvtx].zError();
+//
+//
+//	Handle<TrackCollection> tracks;
+//	iEvent.getByToken(trackToken_,tracks);
+//	for(TrackCollection::const_iterator itTrack = tracks->begin();
+//			itTrack != tracks->end();
+//			++itTrack) {
+//
+//		if ( !itTrack->quality(reco::TrackBase::highPurity) ) continue;
+//		if ( itTrack->charge() == 0 ) continue;
+//		if ( itTrack->pt() < 0.4 ) continue;
+//
+//		double d0 = -1.* itTrack->dxy(v1);
+//		double derror=sqrt(itTrack->dxyError()*itTrack->dxyError()+vxError*vyError);
+//		double dz=itTrack->dz(v1);
+//		double dzerror=sqrt(itTrack->dzError()*itTrack->dzError()+vzError*vzError);
+//		if ( fabs(itTrack->eta()) > 2.4 ) continue;
+//		if ( fabs( dz/dzerror ) > 3. ) continue;
+//		if ( fabs( d0/derror ) > 3. ) continue;
+//		if ( itTrack->ptError()/itTrack->pt() > 0.1 ) continue;
+//
+//		Noff++;
+//	}
+//
+//	int cent = ;
+//	while ( [cent] <= Noff ) cent--;
+//	return cent;
+//}
+//////////////////
 void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 	using namespace edm;
@@ -213,6 +287,7 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 	t.vz = vz;
 
 	// centrality
+
 	if ( bPPreco_ ) {
 		double etHFtowerSumPlus=0;
 		double etHFtowerSumMinus=0;
@@ -260,9 +335,10 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if ( !itTrack->quality(reco::TrackBase::highPurity) ) continue;
 		if ( itTrack->pt() > maxPt_ or itTrack->pt() < minPt_ ) continue;
 		if ( itTrack->eta() > maxEta_ or itTrack->eta() < minEta_ ) continue;
-		if ( itTrack->numberOfValidHits() < 11 ) continue;
-		if ( itTrack->normalizedChi2() / itTrack->hitPattern().trackerLayersWithMeasurement() > 0.15 ) continue;
+//		if ( itTrack->numberOfValidHits() < 11 ) continue;
+//		if ( itTrack->normalizedChi2() / itTrack->hitPattern().trackerLayersWithMeasurement() > 0.15 ) continue;
 		if ( itTrack->ptError()/itTrack->pt() > pterrorpt_ ) continue;
+		if ( itTrack->hitPattern().pixelLayersWithMeasurement() == 0 ) continue;
 
 		double d0 = -1.* itTrack->dxy(v1);
 		double derror=sqrt(itTrack->dxyError()*itTrack->dxyError()+vxError*vyError);
@@ -288,7 +364,14 @@ void QWQVector::analyzeData(const edm::Event& iEvent, const edm::EventSetup& iSe
 		t.Pt[t.Mult] = itTrack->pt();
 		t.Eta[t.Mult] = itTrack->eta();
 		t.Phi[t.Mult] = itTrack->phi();
-		t.weight[t.Mult] = 1.0;
+
+		if ( bEff_ ) {
+			double eff = hEff_cbin[t.Cent]->GetBinContent( hEff_cbin[t.Cent]->FindBin(itTrack->eta(), itTrack->pt()) );
+			t.weight[t.Mult] = 1.0 / eff;
+		} else {
+			t.weight[t.Mult] = 1.0;
+		}
+
 		t.Mult++;
 	}
 

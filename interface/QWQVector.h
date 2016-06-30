@@ -9,6 +9,7 @@
 #include <vector>
 #include <utility>
 #include "TTree.h"
+#include "TH2D.h"
 
 typedef std::complex<double> Complex;
 // event structure
@@ -196,6 +197,7 @@ private:
 	////////////////////////////////
 	void analyzeData(const edm::Event&, const edm::EventSetup&);
 	void analyzeMC(const edm::Event&, const edm::EventSetup&);
+//	int  getNoffCent(const edm::Event&, const edm::EventSetup&, int&);
 
 	void overRide();
 
@@ -203,6 +205,7 @@ private:
 	bool bSim_;
 	bool bPPreco_;
 	bool bRandQ_;
+	bool bEff_;
 
 	double minPt_;
 	double maxPt_;
@@ -214,6 +217,7 @@ private:
 	edm::EDGetTokenT<reco::VertexCollection>	vertexToken_;
 	edm::EDGetTokenT<reco::EvtPlaneCollection>      epToken_;
 	edm::EDGetTokenT<CaloTowerCollection>		towerToken_;
+	edm::InputTag					fweight_;
 
 
 	double	dzdzerror_;
@@ -227,6 +231,7 @@ private:
 	int	minCent_;
 	int	maxCent_;
 
+	TH2D *	hEff_cbin[200];
 
 
 	QWEvent t;

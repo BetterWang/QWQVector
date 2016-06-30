@@ -23,17 +23,47 @@ config.Data.publication = False
 config.Data.useParent = False
 config.Data.allowNonValidInputDataset = True
 config.Site.storageSite = 'T2_CH_CERN'
-try:
-        crabCommand('submit', config = config)
-except HTTPException as hte:
-        print "Failed submitting task: %s" % (hte.headers)
-except ClientException as cle:
-        print "Failed submitting task: %s" % (cle)
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
 
 
 
 config.General.requestName = 'HIMB5_QVector_ALICE_randq_v1'
 config.JobType.psetName = 'qw_PbPb15_HIMB_ppreco_ALICE_randq.py'
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
+
+
+config.General.requestName = 'HIMB5_QVector_ALICE_forward_v1'
+config.JobType.psetName = 'qw_PbPb15_HIMB_ppreco_ALICE_forward.py'
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
+
+
+config.General.requestName = 'HIMB5_QVector_ALICE_forward_randq_v1'
+config.JobType.psetName = 'qw_PbPb15_HIMB_ppreco_ALICE_forward_randq.py'
+#try:
+#        crabCommand('submit', config = config)
+#except HTTPException as hte:
+#        print "Failed submitting task: %s" % (hte.headers)
+#except ClientException as cle:
+#        print "Failed submitting task: %s" % (cle)
+
+# v6 with pixelLayer != 0
+config.General.requestName = 'HIMB5_QVector_ALICE_v7'
+config.JobType.psetName = 'qw_PbPb15_HIMB_ppreco_ALICE.py'
 try:
         crabCommand('submit', config = config)
 except HTTPException as hte:
