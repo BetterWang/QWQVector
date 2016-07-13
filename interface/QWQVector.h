@@ -197,13 +197,12 @@ private:
 	////////////////////////////////
 	void analyzeData(const edm::Event&, const edm::EventSetup&);
 	void analyzeMC(const edm::Event&, const edm::EventSetup&);
-//	int  getNoffCent(const edm::Event&, const edm::EventSetup&, int&);
+	int  getNoffCent(const edm::Event&, const edm::EventSetup&, int&);
 
 	void overRide();
 
 	bool bGen_;
 	bool bSim_;
-	bool bPPreco_;
 	bool bRandQ_;
 	bool bEff_;
 
@@ -211,12 +210,12 @@ private:
 	double maxPt_;
 	double randq_pos_;
 
-	edm::EDGetTokenT<int>                           centralityToken_;
-	edm::EDGetTokenT<reco::TrackCollection>		trackToken_;
+	edm::InputTag					centralityToken_;
+	edm::InputTag					trackToken_;
 	std::vector<int>				algoParameters_;
-	edm::EDGetTokenT<reco::VertexCollection>	vertexToken_;
-	edm::EDGetTokenT<reco::EvtPlaneCollection>      epToken_;
-	edm::EDGetTokenT<CaloTowerCollection>		towerToken_;
+	edm::InputTag					vertexToken_;
+	edm::InputTag					epToken_;
+	edm::InputTag					towerToken_;
 	edm::InputTag					fweight_;
 
 
@@ -227,6 +226,8 @@ private:
 	double  maxvz_;
 	double  minEta_;
 	double  maxEta_;
+	double  minCaloEta_;
+	double  maxCaloEta_;
 
 	int	minCent_;
 	int	maxCent_;
