@@ -5,7 +5,7 @@ from httplib import HTTPException
 
 config = config()
 
-config.General.requestName = 'pPbHM_QVector_eff_v4'
+config.General.requestName = 'pPbHM_QVector_eff_v6'
 config.General.workArea = 'CrabArea'
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -31,7 +31,7 @@ except ClientException as cle:
 
 
 # Pbp
-config.General.requestName = 'pPbHM_QVector_eff_reverse_v4'
+config.General.requestName = 'pPbHM_QVector_eff_reverse_v6'
 config.Data.inputDataset =  '/PAHighPt/davidlw-PA2013_FlowCorr_PromptReco_TrkHM_Gplus_Reverse_ReTracking_v18-28b2b9cce04ec3f20baeb96fbd2295a8/USER'
 try:
         crabCommand('submit', config = config)
@@ -41,7 +41,7 @@ except ClientException as cle:
         print "Failed submitting task: %s" % (cle)
 
 # rereco
-config.General.requestName = 'pPbHM_QVector_eff_rereco_v4'
+config.General.requestName = 'pPbHM_QVector_eff_rereco_v6'
 config.Data.inputDataset =  '/PAHighPt/davidlw-PA2013_FlowCorr_PromptReco_TrkHM_Gplus_Rereco_ReTracking_v18-28b2b9cce04ec3f20baeb96fbd2295a8/USER'
 try:
         crabCommand('submit', config = config)
